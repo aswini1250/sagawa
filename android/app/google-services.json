@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "173780285745",
+    "project_id": "sagawa-63cad",
+    "storage_bucket": "sagawa-63cad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173780285745:android:f2c8ef4a589cfb1b15d810",
+        "android_client_info": {
+          "package_name": "com.ardhas.sagawa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173780285745-4nmqbro1a5udn89etu17grrjb3lrdtj1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjBPIEGO0_jS2a1JJ079sKGH9aL-VP5II"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173780285745-4nmqbro1a5udn89etu17grrjb3lrdtj1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
