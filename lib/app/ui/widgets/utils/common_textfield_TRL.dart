@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
+import 'package:sofproject/app/ui/themes/MyColors.dart';
 
 class CommonTextField extends StatelessWidget {
    const CommonTextField({Key? key,
@@ -42,6 +43,7 @@ class CommonTextField extends StatelessWidget {
             icon,
             color: iconColor,
           ),
+         // fillColor: AppColors.dropdownColor,
           labelText: hintText,
           hintText: labelText,
           border: InputBorder.none,

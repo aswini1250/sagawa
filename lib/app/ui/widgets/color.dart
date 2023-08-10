@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../themes/MyColors.dart';
+
 const active = Color(0xff292828);
 const white = Color(0xffffffff);
 
@@ -7,7 +9,7 @@ const card1 = Color(0xfffbc108);
 const card2 = Color(0xff06A10B);
 const card3 = Color(0xff6a0dad);
 
-const primary = Color(0xff354144);
+const primary =AppColors.primaryColor;
 const primarytext = Color(0xffff0100);
 const sidemenucolor=Color(0xff818282);
 const primarylightcolor=Color(0xffe6ddd4);

@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "173780285745",
-    "project_id": "sagawa-63cad",
-    "storage_bucket": "sagawa-63cad.appspot.com"
+    "project_number": "55412790827",
+    "project_id": "sagawa-b2868",
+    "storage_bucket": "sagawa-b2868.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:173780285745:android:f2c8ef4a589cfb1b15d810",
+        "mobilesdk_app_id": "1:55412790827:android:ac4369a4755f2a8543bc6e",
         "android_client_info": {
           "package_name": "com.ardhas.sagawa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "173780285745-4nmqbro1a5udn89etu17grrjb3lrdtj1.apps.googleusercontent.com",
+          "client_id": "55412790827-go18h79fqgbareudl2f6uv0n035mibch.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBjBPIEGO0_jS2a1JJ079sKGH9aL-VP5II"
+          "current_key": "AIzaSyBmGR4SJdysIxm-JqSANxQUfLN7izxhQHw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "173780285745-4nmqbro1a5udn89etu17grrjb3lrdtj1.apps.googleusercontent.com",
+              "client_id": "55412790827-go18h79fqgbareudl2f6uv0n035mibch.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

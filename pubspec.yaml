@@ -41,14 +41,31 @@ dependencies:
   http:
   dio:
   shared_preferences:
-  fluttertoast:
   advanced_datatable:
-  page_transition: ^2.0.4
+  page_transition:
   intl:
   simple_animations:
   dropdown_search: ^0.6.3
   date_time_picker: ^2.1.0
   flutter_cupertino_datetime_picker: ^3.0.0
+  firebase_messaging: ^14.6.5
+  firebase_core: ^2.15.0
+  flutter_local_notifications: ^15.1.0+1
+  flutter_native_splash: ^2.3.1
+  get_storage: ^2.1.1
+  video_player: ^2.7.0
+  mime: ^1.0.4
+  image_picker:
+  photo_view:
+  file_picker:
+  fluttertoast: ^8.0.8
+  permission_handler: ^10.0.0
+  flare_flutter: ^3.0.2
+  progress_dialog_null_safe:
+  collection: ^1.17.1
+  dots_indicator: ^2.1.2
+  flutter_keyboard_visibility: ^5.4.1
+  introduction_screen: ^3.1.11
 
 dev_dependencies:
   flutter_test:

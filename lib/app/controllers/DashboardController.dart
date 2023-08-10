@@ -3,31 +3,13 @@ import 'package:get/get.dart';
 import 'package:http/http.dart';
 
 import '../config/app_config.dart';
+import '../data/repository/http/incidentFormsRepository.dart';
 
 class DashboardController extends GetxController{
   static DashboardController get to => Get.put(DashboardController());
 TextEditingController search =TextEditingController();
 
   TextEditingController searchController = TextEditingController();
-  TextEditingController IncidentCategories = TextEditingController();
-  TextEditingController subject = TextEditingController();
-  TextEditingController divisorCostCentre = TextEditingController();
-  TextEditingController customerName = TextEditingController();
-  TextEditingController creatorName = TextEditingController();
-  TextEditingController placeOfOccurance = TextEditingController();
-  TextEditingController dateAndTime = TextEditingController();
-  TextEditingController employeeName = TextEditingController();
-  TextEditingController staffId = TextEditingController();
-  TextEditingController sghVehicleNumber = TextEditingController();
-  TextEditingController consigneeShipper = TextEditingController();
-  TextEditingController mawb = TextEditingController();
-  TextEditingController hawb = TextEditingController();
-  TextEditingController totalQuantityOfItem = TextEditingController();
-  TextEditingController weight = TextEditingController();
-  TextEditingController quantityOfDamaged = TextEditingController();
-  TextEditingController remarks = TextEditingController();
-  TextEditingController correctionAction = TextEditingController();
-  TextEditingController preventiveAction = TextEditingController();
   TextEditingController rootCauseAnalysis = TextEditingController();
 
   init() {
@@ -49,11 +31,29 @@ TextEditingController search =TextEditingController();
   set searchValue(value) {
     _searchValue.value = value;
   }
-  final _choosenValue="".obs;
+  final _getListList=[].obs;
 
-  get choosenValue => _choosenValue.value;
+  get getListList => _getListList.value;
 
-  set choosenValue(value) {
-    _choosenValue.value = value;
+  set getListList(value) {
+    _getListList.value = value;
   }
+  final _getListLoading=false.obs;
+
+  get getListLoading => _getListLoading.value;
+
+  set getListLoading(value) {
+    _getListLoading.value = value;
+  }
+  final _getListEmpty=false.obs;
+
+  get getListEmpty => _getListEmpty.value;
+
+  set getListEmpty(value) {
+    _getListEmpty.value = value;
+  }
+  final repository=IncidentFormRepository();
+
+
+
 }

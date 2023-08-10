@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sofproject">
+    package="com.ardhas.sagawa">
    <application
-        android:label="sofproject"
+        android:label="sagawa"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

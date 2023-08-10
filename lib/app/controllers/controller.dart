@@ -3,9 +3,12 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:sofproject/app/data/repository/http/login_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sofproject/app/data/repository/http/incidentFormsRepository.dart';
 import 'package:intl/intl.dart';
 
+import '../data/repository/http/auth_repository.dart';
+import '../ui/screens/demo/dashboard.dart';
 import '../ui/widgets/commonToast.dart';
 
 class AuthController extends  GetxController {
@@ -20,7 +23,7 @@ class AuthController extends  GetxController {
   TextEditingController   gender =TextEditingController();
   TextEditingController   location =TextEditingController();
 
-  final repository=LoginRepository();
+  final repository=AuthRepository();
   final _loginLoading =false.obs;
 
   get loginLoading => _loginLoading.value;
@@ -69,7 +72,7 @@ final _getListLoading=false.obs;
   set choosenAllData(value) {
     _choosenAllData.value = value;
   }
-  getList()async{
+ /* getList()async{
     ///get choosen data
     getListLoading=true;
     var response=await repository.getList();
@@ -98,7 +101,7 @@ final _getListLoading=false.obs;
 
 
 
-  }
+  }*/
   // getList()async{
   ////normal get lists
   //   getListLoading=true;
@@ -132,29 +135,7 @@ final _getListLoading=false.obs;
   set getFinalData(value) {
     _getFinalData.value = value;
   }
-
-  updateOnlychoosenData() async {
-    ///update choosen data
-    List finalList=[];
-    getListList.forEach((e){
-      if(e['chosen']==true){
-        finalList.add(e);
-      }  });
-      Map  body={
-        "selected_members":finalList
-      };
-      debugPrint("body data${body}");
-     var response=await repository.updatechoosenData(body: jsonEncode(body));
-if(response['success']==true){
-CommonToast.show(msg: "Successfully submitted");
-
-  }else{
-
-}
-
-
-}
-final _updateLoginLoading=false.obs;
+  final _updateLoginLoading=false.obs;
 
   get updateLoginLoading => _updateLoginLoading.value;
 
@@ -176,49 +157,35 @@ final _updateLoginLoading=false.obs;
   set loading(value) {
     _loading.value = value;
   }
-clearForm(){
-  username.text="";
-  password.text="";
-  personalDetails.text="";
-  phonenumber.text="";
-  dateOfBirth.text="";
-  location.text="";
-}
-  addNamesToList(){
-    loading=true;
-    nameList.add({
-      "username":"${username.text}",
-      "password":"${password.text}",
-      "personalDetails":"${personalDetails.text}",
-      "phonenumber":"${phonenumber.text}",
-      "dateOfBirth":"${dateOfBirth.text}",
-      "gender":"${gender.text}",
-      "location":"${location.text}",
-    });
-    loading=false;
-    print("test $nameList");
 
-  }
   updatelogin()async {
     /// normal update api
     updateLoginLoading=true;
     debugPrint("post dat");
 
     Map<String,dynamic> body={
-      "User_Name":"${username.text}",
+      "username":"${username.text}",
+      "password":"${password.text}"
     };
     debugPrint("postapi before data${body}");
 
     var response=await repository.updateLogin(body:jsonEncode(body));
     debugPrint("postapi data${body}");
     updateLoginLoading=false;
-    if(response['STATUS']==true){
-      CommonToast.show(msg: "${response['MESSAGE']}");
+    if(response['status']==true){
+      CommonToast.show(msg: "${response['message']}");
+
+      SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
+      aswiniPrefs.setString("user_id","${response['id']}");
+
+
+      Get.to(() =>
+          MyDasboardScreen()
+        //  HomeScreen()
+      );
     }else{
-      CommonToast.show(msg: "${response['MESSAGE']}");
-
+      CommonToast.show(msg: "${response['message']}");
     }
-
   }
 
 }

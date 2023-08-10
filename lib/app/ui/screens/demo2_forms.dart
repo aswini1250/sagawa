@@ -14,6 +14,8 @@ import 'package:sofproject/app/ui/widgets/commonTextManpowerField.dart';
 import 'package:sofproject/app/ui/widgets/common_searchable_dropdown/MainCommonSearchableDropDown.dart';
 import 'package:intl/intl.dart';
 
+import '../../config/app_config.dart';
+
 class GeneralPermitForm extends StatelessWidget {
   const GeneralPermitForm({Key? key}) : super(key: key);
 
@@ -81,6 +83,8 @@ class GeneralPermitForm extends StatelessWidget {
                               }, cb: (){},
                             ),
                           ),
+
+
                           Container(
                             width: Get.width*.8,
                             child: CommonTextFormManPowerField(
@@ -111,6 +115,16 @@ class GeneralPermitForm extends StatelessWidget {
                               },
                             ),
                           ),
+
+
+
+
+
+
+
+
+
+
                           Container(
                             margin: EdgeInsets.symmetric(vertical: 10),
                             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),

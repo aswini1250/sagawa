@@ -13,7 +13,7 @@
             buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
-               BuildableIdentifier = "primary"
+               BuildableIdentifier = "VehicleAccidentControllerry"
                BlueprintIdentifier = "33CC10EC2044A3C60003C045"
                BuildableName = "sofproject.app"
                BlueprintName = "Runner"

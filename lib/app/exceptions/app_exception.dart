@@ -2,6 +2,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:get/get.dart';
 import 'package:sofproject/app/ui/screens/demo/login_page.dart';
+import 'package:sofproject/app/ui/screens/demo/sagawa_login.dart';
 
 import '../ui/widgets/commonToast.dart';
 class AppException implements Exception{
@@ -56,7 +57,7 @@ class UnauthorisedException extends AppException {
     // LoginController.to.otpStatusFor.value="Login";
       Get.back();
       // userPref.token.val=null;
-      Get.to(()=>LoginPage());
+      Get.to(()=>SagawaLogin());
       Get.snackbar("Error", message);
       // SnackBarCommon.showSnack("Error", message);
   }

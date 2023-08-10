@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../themes/MyColors.dart';
+
 class ForgetPassword_Page extends StatefulWidget {
   const ForgetPassword_Page({Key?  key}) : super(key: key);
 
@@ -23,7 +25,7 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
         .size
         .width;
     return Scaffold(
-      backgroundColor: Color(0xff354144),
+      backgroundColor:AppColors.primaryColor,
       body: Form(
         key: _formKey,
         child: Container(
@@ -51,7 +53,7 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
                     child: MaterialButton(onPressed: (){
                       Navigator.pop(context);
                     },
-                      color: Color(0xff354144),
+                      color:AppColors.primaryColor,
                       textColor: Colors.white,
                       child: Icon(
                           Icons.arrow_back_ios_rounded,size: 20
@@ -70,7 +72,7 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
                   // Padding(
                   //   padding: const EdgeInsets.only(right: 330.0),
                   //   child: MaterialButton(onPressed: (){},
-                  //   color: Color(0xff354144),
+                  //   color:AppColors.primaryColor,
                   //     textColor: Colors.white,
                   //     child: Icon(
                   //       Icons.arrow_back_ios_rounded,size: 20
@@ -111,7 +113,7 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
                         border: InputBorder.none,
                         prefixIcon: Icon(
                           Icons.person,
-                          color: Color(0xff354144),
+                          color:AppColors.primaryColor,
                         ),
                         hintText: "Email",
                         // prefixText: "Email",
@@ -132,11 +134,11 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
                       width: size.width * 0.8,
                       child: ElevatedButton(
                         style: OutlinedButton.styleFrom(
-                          backgroundColor: Color(0xff354144),
+                          backgroundColor:AppColors.primaryColor,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16)),
                         ),
-                        // color: const Color(0xff354144),
+                        // color: constAppColors.primaryColor,
                         onPressed: () {
                           if(_formKey.currentState!.validate()){
                             _formKey.currentState!.save();

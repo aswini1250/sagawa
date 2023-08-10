@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:sofproject/app/ui/screens/demo/IncidentScreenDashboard.dart';
+import 'package:sofproject/app/ui/screens/demo/VehicleAccidentScreenDashboard.dart';
+import 'package:sofproject/app/ui/screens/demo/property_damage.dart';
 import 'package:sofproject/app/ui/themes/MyColors.dart';
 import 'package:sofproject/app/ui/widgets/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,7 +59,7 @@ class _DrawerMenu extends State<DrawerMenu> {
                       child: IconButton(
                         icon: Icon(
                           Icons.power_settings_new,
-                          color: opBackgroundColor,
+                          color: AppColors.white,
                         ),
                         onPressed: () {
                           debugPrint("individual ");
@@ -79,32 +82,32 @@ class _DrawerMenu extends State<DrawerMenu> {
                     ),
 
                     SizedBox(height: 5.0),
-                    Text(
-                      "aswini",
-                      style: TextStyle(
-                        color: sidemenucolor,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      "aswini",
-                      style: TextStyle(color: Colors.white70, fontSize: 16.0),
-                    ),
-                    Text(
-                      "aswini",
-                      style: TextStyle(color: Colors.white70, fontSize: 16.0),
-                    ),
+                    // Text(
+                    //   "aswini",
+                    //   style: TextStyle(
+                    //     color: AppColors.white,
+                    //     fontSize: 20.0,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
+                    // Text(
+                    //   "aswini",
+                    //   style: TextStyle(color: Colors.white70, fontSize: 16.0),
+                    // ),
+                    // Text(
+                    //   "aswini",
+                    //   style: TextStyle(color: Colors.white70, fontSize: 16.0),
+                    // ),
                     SizedBox(height: 30.0),
                     _buildDivider(),
                     ListTile(
                       onTap: () {},
                       leading: Icon(
                         Icons.home,
-                        color: sidemenucolor,
+                        color: AppColors.white,
                         size: 20,
                       ),
-                      title: Text('home'.tr,
+                      title: Text('Home'.tr,
                           style: TextStyle(fontSize: 16, color: Colors.white)),
                     ),
                     _buildDivider(),
@@ -121,7 +124,7 @@ class _DrawerMenu extends State<DrawerMenu> {
                             onTap: () {},
                             leading: Icon(
                               Icons.assignment_late_outlined,
-                              color: sidemenucolor,
+                              color: AppColors.white,
                               size: 20,
                             ),
                             title: Text('Incident Management'.tr,
@@ -130,67 +133,62 @@ class _DrawerMenu extends State<DrawerMenu> {
                           )),
                       children: <Widget>[
                         ExpansionTile(
-                          tilePadding: const EdgeInsets.only(left: 18.0),
-                          iconColor: primary,
-                          collapsedTextColor: Color(0xFFf9e9ce),
-                          textColor: primary,
-                          backgroundColor: Color(0xFFf9e9ce),
-                          collapsedIconColor: Color(0xFFf9e9ce),
-                          title: Text(
-                            "incident".tr,
-                            style: TextStyle(
-                              //color:Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                          tilePadding:
+                          const EdgeInsets.only(right: 20.0, left: 20),
+
+                          initiallyExpanded: true,
+                          title: InkWell(
+                            child: Text("Incident".tr,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color:AppColors.white)),
+                            onTap: () {
+Get.to(()=>IncidentScreenDashboard());
+
+                            },
                           ),
-                          children: <Widget>[
-                            ExpansionTile(
-                              tilePadding:
-                              const EdgeInsets.only(right: 20.0, left: 20),
+                          onExpansionChanged: ((newState) {
 
-                              initiallyExpanded: true,
-                              title: InkWell(
-                                child: Text("Accident".tr,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Color(0xFF686868))),
-                                onTap: () {
+                          }),
+                        ), //
 
+                        ExpansionTile(
+                          tilePadding:
+                          const EdgeInsets.only(right: 20.0, left: 20),
 
-                                },
-                              ),
-                              onExpansionChanged: ((newState) {
+                          initiallyExpanded: true,
+                          title: InkWell(
+                            child: Text("Accident".tr,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.white)),
+                            onTap: () {
+
+                              Get.to(()=>VehicleAccidentScreenDashboard());
+
+                            },
+                          ),
+                          onExpansionChanged: ((newState) {
+
+                          }),
+                        ), //
+                        ExpansionTile(
+                          tilePadding:
+                          const EdgeInsets.only(right: 20.0, left: 20),
+
+                          initiallyExpanded: true,
+                          title: InkWell(
+                              child: Text(
+                                  'Property damage'.tr,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.white)),
+                              onTap: () async {
+                                Get.to(()=>PropertyDamageScreenDashboard());
 
                               }),
-                            ), //
-                            ExpansionTile(
-                              tilePadding:
-                              const EdgeInsets.only(right: 20.0, left: 20),
-
-                              initiallyExpanded: true,
-                              title: InkWell(
-                                  child: Text(
-                                      'Primary damage'.tr,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Color(0xFF686868))),
-                                  onTap: () async {
-                                    // pr.show();
-
-                                    print('clicked custom category');
-                                    //print(categorylist[index].catName);
-                                    //print(categorylist[index].catId);
-
-                                    Future.delayed(Duration(seconds: 2))
-                                        .then((value) {
-                                      setState(() {});
-                                    });
-                                  }),
-                              onExpansionChanged: ((newState) {}),
-                            ),
-                          ],
-                        ),
-                      ],
+                          onExpansionChanged: ((newState) {}),
+                        ),                      ],
                     ),
                     _buildDivider(),
                     ListTile(
@@ -201,37 +199,14 @@ class _DrawerMenu extends State<DrawerMenu> {
                             Id: "");                      },
                       leading: Icon(
                         Icons.power_settings_new,
-                        color: sidemenucolor,
+                        color: AppColors.white,
                         size: 20,
                       ),
-                      title: Text('logout'.tr,
+                      title: Text('Logout'.tr,
                           style: TextStyle(fontSize: 16, color: Colors.white)),
                     ),
                     _buildDivider(),
-                    // ListTile(
-                    //   onTap: () {},
-                    //   leading: Icon(
-                    //     Icons.group_add,
-                    //     color: Colors.white,
-                    //     size: 20,
-                    //   ),
-                    //   title: Text('Geneology',
-                    //       style: TextStyle(fontSize: 14, color: Colors.white)),
-                    // ),
-                    // _buildDivider(),
-                    // ListTile(
-                    //   onTap: () {
-                    //     Navigator.of(context).pop();
-                    //   },
-                    //   leading: Icon(
-                    //     Icons.add_circle_outlined,
-                    //     color: Colors.white,
-                    //     size: 20,
-                    //   ),
-                    //   title: Text('More !!',
-                    //       style: TextStyle(fontSize: 14, color: Colors.white)),
-                    // ),
-                    // _buildDivider(),
+
                   ],
                 ),
               ),

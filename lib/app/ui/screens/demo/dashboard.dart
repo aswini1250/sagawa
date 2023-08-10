@@ -2,15 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sofproject/app/controllers/DashboardController.dart';
-import 'package:sofproject/app/ui/screens/demo/PrimaryDamageScreen.dart';
 import 'package:sofproject/app/ui/screens/demo/drawer.dart';
+import 'package:sofproject/app/ui/screens/demo/property_damage.dart';
 import 'package:sofproject/app/ui/screens/demo_listview_gridview_checkbox.dart';
 import 'package:sofproject/app/ui/themes/MyColors.dart';
 import 'package:sofproject/app/ui/widgets/color.dart';
 import 'package:sofproject/app/ui/widgets/common_button.dart';
+import 'package:sofproject/app/ui/widgets/utils/common_label_expanded_wrap_TRL.dart';
 
-import 'AccidentScreen.dart';
+import '../../widgets/colors.dart';
+import '../../widgets/utils/fade_animation_TRL.dart';
 import 'IncidentScreenDashboard.dart';
+import 'VehicleAccidentScreenDashboard.dart';
 
 class MyDasboardScreen extends StatefulWidget {
    MyDasboardScreen({Key? key}) : super(key: key);
@@ -56,7 +59,7 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
             elevation: 0.5,
             backgroundColor:  AppColors.primaryColor,
             title: Text(
-              'Sawaga'.tr,
+              'Sagawa'.tr,
               style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,fontFamily: "Sakkal Majalla",
@@ -104,7 +107,70 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
             InkWell(onTap:(){
               showBottomDialogRisk(context);
             },
-                child: gridviewPart())
+                child: Column(
+                  children: [
+                    Text("Incident Management",style: TextStyle(color: AppColors.black,fontSize: 25),),
+SizedBox(height: 10,),
+                    Column(
+                      children: <Widget>[
+///////////////////////////////////////////////////////////
+
+
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: const EdgeInsets.only(left:20.0,right:20,top:5,bottom: 5),
+                              padding: const EdgeInsets.all(5.0),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(
+                                      color: AppColors.lightGrey,
+                                      width: 2.0,
+                                      style: BorderStyle.solid),
+                                  color: AppColors.white
+                              //  color: lightBGGold,
+                             //   border: Border.all(color: lightBGGold),
+
+                              ),
+                              child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                      radius: 25,
+                                      backgroundColor: Color(0xFFefeff4),
+                                      child: ClipOval(
+                                        child: Image.asset(
+                                          'assets/images/logo-img-sofproject.png',
+                                          width: 50,
+                                          height: 50,
+                                          fit: BoxFit.fitWidth,
+                                        ),
+                                      ),
+                                    ),
+                                    new Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: new Text(
+                                        "Incident",
+                                          style: TextStyle(
+                                              fontSize: 20, color: Colors.black),
+                                        )),
+                                    IconButton(
+                                      icon: Icon(
+                                          Icons.arrow_right,
+                                          color: Colors.black,
+                                          size: 42),
+                                      onPressed: () {
+                                        setState(() {
+                                        });
+                                        //_key.currentState.openDrawer();
+                                      },
+                                    ),
+                                  ]),
+                            ),
+
+                      ],
+                    )
+                  ],
+                ))
 
         ]),
         )  ],
@@ -193,9 +259,9 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
 /////////////////////////////////////////////////////////
                       shortWithoutArrowExtensibleWidget(text: 'Incident', onTap: (){Get.to(    IncidentScreenDashboard(),
                       );},),
-                      shortWithoutArrowExtensibleWidget(text: 'Accident',  onTap: (){Get.to(    AccidentScreen(),
+                      shortWithoutArrowExtensibleWidget(text: 'Accident',  onTap: (){Get.to(    VehicleAccidentScreenDashboard(),
                       );},),
-                      shortWithoutArrowExtensibleWidget(text: 'Primary damage',  onTap: (){Get.to(    PrimaryDamageScreen(),
+                      shortWithoutArrowExtensibleWidget(text: 'Property damage',  onTap: (){Get.to(PropertyDamageScreenDashboard(),
                       );},),
 
 
@@ -206,7 +272,9 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
               actions: <Widget>[
                 SizedBox(width: 20,),
 
-commonButton(title: "Cancel", onTap: (){})  ,
+commonButton(title: "Cancel", onTap: (){
+  Get.back();
+})  ,
                 SizedBox(width: 20,),
 
 
@@ -305,7 +373,7 @@ commonButton(title: "Cancel", onTap: (){})  ,
         });
   }
   Widget shortWithoutArrowExtensibleWidget({required String text,required Function() onTap}){
-    return                     ExpansionTile(
+    return    ExpansionTile(
       tilePadding: const EdgeInsets.only(right: 20.0, left: 20),
       initiallyExpanded: true,
       trailing: Image.asset(

@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -12,20 +11,30 @@ class HttpHelper {
 
   Future<Response> multipart(
       String url, Map<String, dynamic> data, Map<String, File> files,
-      {bool isImageUpload = false, auth = false}) async {
-    print("Api Post url $url");
+      {bool isImageUpload = false, required String name,auth = false}) async {
+    print("Api Post url $url body:${data}");
 
     Map<String, MultipartFile> fileMap = {};
+    // if (isImageUpload == true) {
+    //   for (MapEntry fileEntry in files.entries) {
+    //     File file = fileEntry.value;
+    //     String fileName = file.path;
+    //     fileMap[fileEntry.key] = MultipartFile(
+    //         file.openRead(), await file.length(),
+    //         filename: fileName);
+    //   }
+    var list=[];
     if (isImageUpload == true) {
       for (MapEntry fileEntry in files.entries) {
         File file = fileEntry.value;
-        String fileName = file.path;
-        fileMap[fileEntry.key] = MultipartFile(
-            file.openRead(), await file.length(),
-            filename: fileName);
+        List<int> fileBytes = await file.readAsBytes();
+        String base64String = base64Encode(fileBytes);
+        list.add({"inc_image":"$base64String"});
       }
-      print("check imageupload ${data.runtimeType}");
+      data["$name"]=list;
+      debugPrint("fdfdsfdsfdfdsfadsfdsafdsfdsfdsf${data["$name"].length}]");
       data.addAll(fileMap);
+      debugPrint("check imageupload ${data}");
     }
     var formData = FormData.fromMap(data);
     Dio dio = Dio();
@@ -150,56 +159,54 @@ class HttpHelper {
         HttpHeaders.acceptHeader:"application/json",
       });
     }
-      var token=prefs.getString("token");
-      if(token!=null && token.isNotEmpty){
-        headers.addAll({
-          HttpHeaders.authorizationHeader: "Bearer $token",
-        });
-      }
-      return headers;
+    var token=prefs.getString("token");
+    if(token!=null && token.isNotEmpty){
+      headers.addAll({
+        HttpHeaders.authorizationHeader: "Bearer $token",
+      });
     }
+    return headers;
   }
+}
 
 
 
 
-  dynamic _returnResponse(http.Response response) async {
+dynamic _returnResponse(http.Response response) async {
   if(response.statusCode==500 || response.statusCode==502){
     throw FetchDataException('',500);
   }
-    // var responseBody = jsonDecode(response.body);
+  // var responseBody = jsonDecode(response.body);
 
-    switch (response.statusCode) {
-      case 200:
-      case 201:
-        var responseJson = response.body;
-        return responseJson;
-      case 400:
-        var responseJson = response.body;
-        return responseJson;
-      case 404:
-        var message = "";
-        //throw BadRequestException(message.toString(), response.statusCode);
-     var responseJson = response.body;
+  switch (response.statusCode) {
+    case 200:
+    case 201:
+      var responseJson = response.body;
       return responseJson;
-      case 401:
-      case 403:
-        //Utility.log('object');
+    case 400:
+      var responseJson = response.body;
+      return responseJson;
+    case 404:
+      var message = "";
+      //throw BadRequestException(message.toString(), response.statusCode);
+      var responseJson = response.body;
+      return responseJson;
+    case 401:
+    case 403:
+    //Utility.log('object');
 
-        throw UnauthorisedException( "", response.statusCode,
-            next: "");
+      throw UnauthorisedException( "", response.statusCode,
+          next: "");
 
-        break;
-      case 422:
-        var responseJson = response.body.toString();
-        return responseJson;
-      case 502:
-        throw FetchDataException('',500);
-      case 500:
+      break;
+    case 422:
+      var responseJson = response.body.toString();
+      return responseJson;
+    case 502:
+      throw FetchDataException('',500);
+    case 500:
       throw FetchDataException('${json.decode(response.body)['message']}',500);
-      default:
-        throw FetchDataException('${json.decode(response.body)['message']}',500);
-    }
+    default:
+      throw FetchDataException('${json.decode(response.body)['message']}',500);
   }
-
-
+}
