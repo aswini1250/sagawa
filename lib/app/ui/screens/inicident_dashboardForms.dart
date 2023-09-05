@@ -355,11 +355,11 @@ class _IncidentDashboardFormsState extends State<IncidentDashboardForms> {
                   )
               ),
               CommonExpandableWrap(
-                  title: 'J. Quantity of Damged',
+                  title: 'J. Quantity of Damaged',
                   child:CommonTextField(
                     controller:jobDescriptionController,
-                    labelText: "Quantity of Damged",
-                    hintText: "Enter Quantity of Damged",
+                    labelText: "Quantity of Damaged",
+                    hintText: "Enter Quantity of Damaged",
                     onChange: (data){
 
                     },

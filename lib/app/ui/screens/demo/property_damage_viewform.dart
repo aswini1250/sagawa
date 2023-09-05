@@ -1,14 +1,16 @@
-
-
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sofproject/app/config/app_config.dart';
 import 'package:sofproject/app/ui/themes/MyColors.dart';
 import 'package:sofproject/app/ui/widgets/commonTextManpowerField.dart';
 import 'package:sofproject/app/ui/widgets/common_button.dart';
@@ -20,17 +22,23 @@ import '../../widgets/commonToast.dart';
 import '../../widgets/progress_loading.dart';
 import '../../widgets/utils/fade_animation_TRL.dart';
 
-class PropertyDamageDashboardMyForms extends StatefulWidget {
-  PropertyDamageDashboardMyForms({Key? key}) : super(key: key);
+class PropertyDamageViewForms extends StatefulWidget {
+  PropertyDamageViewForms({Key? key,required this.ignoring, required this.canShowSection2ForApprovals,required this.property_user_id}) : super(key: key);
+  final bool ignoring;
+final String property_user_id;
+  final bool canShowSection2ForApprovals;
+
 
   @override
-  State<PropertyDamageDashboardMyForms> createState() => _PropertyDamageDashboardMyFormsState();
+  State<PropertyDamageViewForms> createState() => _PropertyDamageViewFormsState();
 }
 
-class _PropertyDamageDashboardMyFormsState extends State<PropertyDamageDashboardMyForms> {
+class _PropertyDamageViewFormsState extends State<PropertyDamageViewForms> {
   TextEditingController jobDescriptionController=TextEditingController();
-  final _formKey = GlobalKey<FormState>();
 
+  SingingCharacter? _character = SingingCharacter.nearMiss;
+  final _formKey = GlobalKey<FormState>();
+  final _formKeyApp = GlobalKey<FormState>();
 
   void _pickFiles() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -53,14 +61,16 @@ class _PropertyDamageDashboardMyFormsState extends State<PropertyDamageDashboard
     });
   }
 
-init()async{
-  PropertyDamageController.to.showBodyParts=true;
+  init()async{
+    PropertyDamageController.to.showBodyParts=true;
+    SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
+    PropertyDamageController.to.editorName.text=aswiniPrefs.getString("editor_name")??"";
+    PropertyDamageController.to.creatorNameController.text=aswiniPrefs.getString("creator_name")??"";
+    PropertyDamageController.to.designationApp.text=aswiniPrefs.getString("designation_name")??"";
+    PropertyDamageController.to.subjectApp.text=aswiniPrefs.getString("user_name")??"";
+    PropertyDamageController.to.dateAndTimeApp.text="${DateFormat("yyyy-MM-dd  hh:mm:ss").format(DateTime.now())}"??"";
 
-  SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
-  PropertyDamageController.to.editorName.text=aswiniPrefs.getString("editor_name")??"";
-  PropertyDamageController.to.creatorNameController.text=aswiniPrefs.getString("creator_name")??"";
-
-}
+  }
   @override
   void initState() {
     super.initState();
@@ -73,29 +83,43 @@ init()async{
     PropertyDamageController.to.getPreventiveAction();
 
   }
+
   @override
   Widget build(BuildContext context) {
-
     return  Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomInset: false,
       appBar: new AppBar(
         backgroundColor: AppColors.primaryColor,
         title: new Text(
-          'Property Damage Form'.tr,
+          'PropertyDamage Form'.tr,
           style: TextStyle(color: AppColors.white),
         ),
         elevation: 0.0,
       ),
-      body: Container(
+      body:   Container(
         height: Get.height,
         width: Get.width,
         child: SingleChildScrollView(
+          child: section1(),
+        ),
+      ),
+    );
+  }
+
+    Widget section1() {
+    return  Column(
+      children: [
+        IgnorePointer(
+          ignoring: widget.ignoring,
           child: Form(
             key: _formKey,
-
             child: Column(
               children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text("Section-01",style: TextStyle(color: AppColors.primaryColor,fontSize: 20)),
+                ),
                 ///Expandable widget with common textfield
                 Container(
                   width:   Get.width*.9,
@@ -137,23 +161,6 @@ init()async{
                 ),
 
                 ///Expandable widget with common textfield
-                Container(
-                  width:   Get.width*.9,
-                  child: CommonTextFormManPowerField(
-                    controller:PropertyDamageController.to.customerName,
-                    lableText: "Customer Name",
-                    hintText: "Enter Customer Name",
-                    onChanged: (data){
-
-                    },
-                    validator: (data){
-                      return null;
-                    },
-                  ),
-                ),
-
-
-
                 IgnorePointer(
                   ignoring: true,
                   child: Container(
@@ -287,9 +294,7 @@ init()async{
 
                       },
                       validator: (data){
-                        if(data!.isEmpty){
-                          return "Required Staff ID!";
-                        }
+
                         return null;
                       },
                     ),
@@ -430,7 +435,7 @@ init()async{
                   child: CommonTextFormManPowerField(
                     controller:PropertyDamageController.to.bodyParts,
                     lableText: "Injured Body Parts",
-                    hintText: " Body Parts",
+                    hintText: "Enter Injured Body Parts",
                     onChanged: (data){
 
                     },
@@ -612,7 +617,7 @@ init()async{
                     title: 'corrective_action',
                     items: PropertyDamageController.to.correctiveActionList,                label: 'Corrective Action'.tr,
 
-                    isRequired: false,
+                    isRequired: true,
                     controller: PropertyDamageController.to.correctiveAction,
                     onChanged: (data) {
                     }, cb: (){},
@@ -633,7 +638,7 @@ init()async{
                     title: 'preventive_action',
                     items: PropertyDamageController.to.preventiveActionList,                label: 'Preventive Action'.tr,
 
-                    isRequired: false,
+                    isRequired: true,
                     controller: PropertyDamageController.to.preventiveAction,
                     onChanged: (data) {
                     }, cb: (){},
@@ -672,155 +677,308 @@ init()async{
                   ),
                 ),
 
-
-
-                CommonButton(text: "Choose files", width: Get.width*.7,
-                    onPressed: (){
-
-                      _pickFiles();
-                    }),
-                SizedBox(height: 16),
-                Obx(()=>
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: PropertyDamageController.to.selectedFiles.length,
-                  itemBuilder: (BuildContext context, index) {
-
-                    final file = PropertyDamageController.to.selectedFiles[index];
-                    return Column(
-                      children: [
-                        ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text("${file.path}".split("/")[7]),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              showDeleteAlertDialog(
-                                  Get.context!,
-                                  file:file);
-
-                              // _removeFile(file);
-
-                            },
-                          ),
-                        ),
-                  InkWell(
-                    onTap:(){
-                      OpenFilex.open("${file.path}");
-
-
-                    },
-
-                    child: Center(
-                      child: Container(
-                           width: Get.width*.5,
-                           decoration: BoxDecoration(
-                             borderRadius: BorderRadius.circular(10),
-                             color: Colors.purple
-                           ),
-                           child: Padding(
-                             padding: const EdgeInsets.all(8.0),
-                             child: Row(
-                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                               children: [
-                                 Text("Click to view",style: TextStyle(fontSize: 12,color: AppColors.white),),
-                                 Icon(Icons.preview_rounded,color: AppColors.white,)
-                               ],
-                             ),
-                           ),
-                         ),
-                    ),
-                  ),
-
-                      ],
-                    );
-                  },
-                )
-                ),
-
-
-
-                SizedBox(height: 10,),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      commonButton(title: "Cancel", onTap: (){
-
-                        PropertyDamageController.to.clearFormField();
-                      }),
-                      commonButton(title: "Submit", onTap: (){
-                        if(_formKey.currentState!.validate()) {
-                          PropertyDamageController.to.saveAccidents();
-                        }else{
-                          CommonToast.show(msg: "Please fill all fields");
-                        }
-                      })
-
-                    ],
-                  ),
-                )
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-  showDeleteAlertDialog(BuildContext context, {required File file}) {
-    // set up the buttons
-    Widget cancelButton = commonButton(
-
-      title: "Cancel",onTap: (){
-      Get.back();
-    },
-    );
-    Widget continueButton =   commonButton(
-      title: "Confirm",onTap: (){
-
-      _removeFile(file);
-      Fluttertoast.showToast(msg: 'File removed');
-      Get.back();
 
 
-    },
-    );
 
-    // set up the AlertDialog
-    AlertDialog alert = AlertDialog(
+        CommonButton(text: "Choose files", width: Get.width*.7,
+            onPressed: (){
 
-      title: Text(
-        "Alert!".tr,
-        style: TextStyle(
-            color: AppColors.black,
-            fontSize: 20,
-            fontWeight: FontWeight.bold),
-      ),
-      content: Text(
-        "Are you sure you want to delete?".tr,
-        style: TextStyle(color: AppColors.black, fontSize: 15),
-      ),
-      actions: [
-        Row(
-          children: [
-            cancelButton,
-            SizedBox(width: 20),
-            continueButton,
+              _pickFiles();
+            }),
+        SizedBox(height: 16),
+        Obx(()=>PropertyDamageController.to.showImage==false?
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: PropertyDamageController.to.selectedFiles.length,
+          itemBuilder: (BuildContext context, index) {
 
-          ],
+            final file = PropertyDamageController.to.selectedFiles[index];
+            return Column(
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: InkWell(
+                      onTap:(){
+                        OpenFilex.open("${file.path}");
+                      },
+                      child: Text("${file.path}".split("/")[7])),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _removeFile(file);
+                      Fluttertoast.showToast(msg: 'File removed');
+                    },
+                  ),
+                ),
+                InkWell(
+                  onTap:() async{
+                    OpenFilex.open(file.path);
+                  },
+                  child: Center(
+                    child: Container(
+                      width: Get.width*.5,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.purple
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                          children: [
+                            Text("Click to view",style: TextStyle(fontSize: 12,color: AppColors.white),),
+                            Icon(Icons.preview_rounded,color: AppColors.white,)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+              ],
+            );
+          },
+        ):
+        ListView.builder(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          itemCount: PropertyDamageController.to.incidentUploads.length,
+          itemBuilder: (BuildContext context, index) {
+
+            final file = PropertyDamageController.to.incidentUploads[index];
+            return Column(
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: InkWell(
+                      onTap:(){
+                        //OpenFilex.open("${file.path}");
+                      },
+                      child:
+
+                      Text("${file['uploadfile_path']}".split("/")[5])),
+                  trailing: IconButton(
+                    icon: Icon(Icons.delete),
+                    onPressed: () {
+                      _removeFile(file);
+                      Fluttertoast.showToast(msg: 'File removed');
+                    },
+                  ),
+                ),
+                InkWell(
+                  onTap:() async{
+                    // if(file['uploadfile_path'].toString().contains(".jpg")||file['uploadfile_path'].toString().contains(".jpeg")||file['uploadfile_path'].toString().contains(".png")||file['uploadfile_path'].toString().contains(".gif"))
+                    // {
+                    //   showMyDialog("test",AppConfig.imgUrl+file['uploadfile_path']);
+                    // }
+
+                    final extension = p.extension(PropertyDamageController.to.incidentUploads[index]['uploadfile_path']); // '.dart'
+                    debugPrint("extension of file name ${extension}");
+                    final http.Response responseData = await http.get(Uri.parse("${AppConfig.imgUrl}${ PropertyDamageController.to.incidentUploads[index]['uploadfile_path']}"));
+                    Uint8List uint8list = responseData.bodyBytes;
+                    var buffer = uint8list.buffer;
+                    ByteData byteData = ByteData.view(buffer);
+                    var tempDir = await getTemporaryDirectory();
+                    File file = await File('${tempDir.path}/incident_document$extension').writeAsBytes(
+                        buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+                    OpenFilex.open(file.path);
+                  },
+                  child: Center(
+                    child: Container(
+                      width: Get.width*.5,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.purple
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                          children: [
+                            Text("Click to view",style: TextStyle(fontSize: 12,color: AppColors.white),),
+                            Icon(Icons.preview_rounded,color: AppColors.white,)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
         ),
+
+        ),
+
+
+        SizedBox(height: 16),
+        Obx(()=> PropertyDamageController.to.showButton==false?
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                commonButton(title: "Cancel", onTap: (){
+
+                  PropertyDamageController.to.clearFormField();
+                }),
+                commonButton(title: "Submit", onTap: (){
+                  if(_formKey.currentState!.validate()) {
+                    PropertyDamageController.to.updateAccidents(user_id: '${widget.property_user_id}');
+                  }else{
+                    CommonToast.show(msg: "Please fill all fields");
+                  }
+                })
+
+              ],
+            ),
+          ):SizedBox(),
+        ),
+        SizedBox(height: 10,),
+        Obx(()=>PropertyDamageController.to.viewButton==true &&PropertyDamageController.to.showsectionSection=="1"?
+        SizedBox():
+        widget.canShowSection2ForApprovals==true?
+
+        section2():SizedBox()
+        )
       ],
     );
+  }
+  Widget section2() {
+    return Form(
+      key: _formKeyApp,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text("Section-02",style: TextStyle(color: AppColors.primaryColor,fontSize: 20)),
+          ),
+          IgnorePointer(
+            ignoring: true,
+            child: Container(
+              width:   Get.width*.9,
+              child: CommonTextFormManPowerField(
+                controller:PropertyDamageController.to.subjectApp,
+                lableText: "User Name",
+                hintText: "Enter User Name",
+                onChanged: (data){
 
-    // show the dialog
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alert;
-      },
+                },
+                validator: (data){
+
+                  return null;
+                },
+              ),
+            ),
+          ),
+          IgnorePointer(
+            ignoring: true,
+
+            child: Container(
+              width:   Get.width*.9,
+              child: CommonTextFormManPowerField(
+                controller:PropertyDamageController.to.designationApp,
+                lableText: "Designation",
+                hintText: "Enter Designation",
+                onChanged: (data){
+
+                },
+                validator: (data){
+                  return null;
+                },
+              ),
+            ),
+          ),
+
+          ///Expandable widget with common textfield
+          IgnorePointer(
+            ignoring: true,
+            child: Container(
+              width:   Get.width*.9,
+              child: CommonTextFormManPowerField(
+                controller:PropertyDamageController.to.dateAndTimeApp,
+                isDatePicker:true,
+
+                lableText: "Date and Time",
+                onTap: ()async{
+                  print("test tap");
+                  DateTime? datepicked = await showDatePicker(
+                      context: Get.context!,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime.now());
+                  if (datepicked != null) {
+                    PropertyDamageController.to.dateAndTimeApp.text = DateFormat('yyyy-MM-dd  hh:mm:ss').format(datepicked);
+                  }
+                },
+                hintText: "Enter Date and Time",
+                onChanged: (data){
+
+                },
+                validator: (data){
+
+                  return null;
+                },
+              ),
+            ),
+          ),
+          Container(
+            width:   Get.width*.9,
+            child: CommonTextFormManPowerField(
+              controller:PropertyDamageController.to.descrioptionApp,
+              lableText: "Description *",
+              hintText: "Enter Description",
+              onChanged: (data){
+
+              },
+              validator: (data){
+                if(data!.isEmpty){
+                  return "Required Description!";
+                }
+                return null;
+              },
+            ),
+          ),
+
+
+
+          Obx(()=> PropertyDamageController.to.viewButton==false?
+              Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonButton(title: "Approve", onTap: ()async{
+                    if(_formKeyApp.currentState!.validate()) {
+                      await   PropertyDamageController.to.updateIncidentApprovals(property_user_id: '${widget.property_user_id}', approveId: '1');
+
+                    }else{
+                      CommonToast.show(msg: "Please fill all fields");
+                    }
+                  }),
+                  commonButton(title: "Reject", onTap: () async{
+                    if(_formKeyApp.currentState!.validate()) {
+                      await   PropertyDamageController.to.updateIncidentApprovals(property_user_id: '${widget.property_user_id}', approveId: '0');
+
+                    }else{
+                      CommonToast.show(msg: "Please fill all fields");
+                    }
+                  })
+
+                ],
+              ),
+            ):SizedBox(),
+          ),
+
+        ],
+      ),
     );
   }
 

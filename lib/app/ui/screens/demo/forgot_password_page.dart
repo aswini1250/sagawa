@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:line_icons/line_icons.dart';
 
 import '../../themes/MyColors.dart';
 
@@ -65,7 +66,7 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 20),
-                    child: Image.asset('assets/images/flashlogo.png',
+                    child: Image.asset('assets/images/logo-img-sofproject.png',
                       height: 100, width: 200,
                     ),
                   ),
@@ -112,7 +113,7 @@ class _ForgetPassword_PageState extends State<ForgetPassword_Page> {
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         prefixIcon: Icon(
-                          Icons.person,
+                          LineIcons.edit,
                           color:AppColors.primaryColor,
                         ),
                         hintText: "Email",

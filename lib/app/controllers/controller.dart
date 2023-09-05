@@ -3,17 +3,20 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sofproject/app/data/repository/http/incidentFormsRepository.dart';
 import 'package:intl/intl.dart';
 
 import '../data/repository/http/auth_repository.dart';
 import '../ui/screens/demo/dashboard.dart';
+import '../ui/screens/demo/initial_loading.dart';
 import '../ui/widgets/commonToast.dart';
 
 class AuthController extends  GetxController {
 
   static AuthController get to => Get.put(AuthController());
+  TextEditingController token=TextEditingController();
 
   TextEditingController username=TextEditingController();
   TextEditingController password=TextEditingController();
@@ -72,6 +75,9 @@ final _getListLoading=false.obs;
   set choosenAllData(value) {
     _choosenAllData.value = value;
   }
+
+
+
  /* getList()async{
     ///get choosen data
     getListLoading=true;
@@ -128,6 +134,9 @@ final _getListLoading=false.obs;
   //
   //
   // }
+
+
+
  final  _getFinalData=false.obs;
 
   get getFinalData => _getFinalData.value;
@@ -157,16 +166,31 @@ final _getListLoading=false.obs;
   set loading(value) {
     _loading.value = value;
   }
+  loginCheck()async{
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    var token=prefs.getString('token');
+    print("token $token");
+    if(token!=null && token.isNotEmpty){
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   updatelogin()async {
     /// normal update api
     updateLoginLoading=true;
     debugPrint("post dat");
+   // debugPrint("postapi before data${body}");
 
     Map<String,dynamic> body={
       "username":"${username.text}",
-      "password":"${password.text}"
+      "password":"${password.text}",
+      //this is firebase token giving to backend,this is not a authorization token
+      "device_token":"${token.text}"
     };
+    debugPrint("postapi before data**${username.text}***");
+    debugPrint("postapi before data**${password.text}***");
     debugPrint("postapi before data${body}");
 
     var response=await repository.updateLogin(body:jsonEncode(body));
@@ -176,9 +200,16 @@ final _getListLoading=false.obs;
       CommonToast.show(msg: "${response['message']}");
 
       SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
-      aswiniPrefs.setString("user_id","${response['id']}");
+      aswiniPrefs.setString("token","token}");
+      aswiniPrefs.setString("user_type","${response['UserData']['user_type']??"nil"}");
+      aswiniPrefs.setString("user_id","${response['id']??""}");
+      aswiniPrefs.setString("creator_id","${response['UserData']?['id']??""}");
+      aswiniPrefs.setString("creator_name","${response['UserData']?['full_name']??""}");
+      aswiniPrefs.setString("editor_id","${response['Editor']?['id']??""}");
 
-
+      aswiniPrefs.setString("editor_name","${response['Editor']?['full_name']??""}");
+      aswiniPrefs.setString("user_name","${response['UserData']?['full_name']??""}");
+      aswiniPrefs.setString("designation_name","${response['UserData']?['desc_name']??""}");
       Get.to(() =>
           MyDasboardScreen()
         //  HomeScreen()
@@ -187,5 +218,30 @@ final _getListLoading=false.obs;
       CommonToast.show(msg: "${response['message']}");
     }
   }
+  checkOnBoarding() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('onBoarding');
+    if (token != null && token.isNotEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
+  logout()async{
+    List storedData=[
+      "token",
+      "name",
+      "photo",
+      "email",
+      "phone"
+    ];
+    SharedPreferences prefs=await SharedPreferences.getInstance();
+    storedData.forEach((element) {
+      prefs.remove(element);
+    });
+    // prefs.clear();
+    Get.offAll(()=>InitialLoginTest());
+    GetStorage().erase();
+  }
 }

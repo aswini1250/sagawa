@@ -14,6 +14,7 @@ import 'app/services/FCM_service.dart';
 import 'app/translations/app_translations.dart';
 import 'app/ui/screens/demo/IncidentScreenDashboard.dart';
 import 'app/ui/screens/demo/dashboard.dart';
+import 'app/ui/screens/demo/incident_view_form_screen.dart';
 import 'app/ui/screens/demo/sagawa_login.dart';
 import 'app/ui/screens/splash/splash.dart';
 import 'app/ui/themes/app_theme.dart';
@@ -46,9 +47,10 @@ void main() async{
         locale: const Locale('en'),
         initialRoute: '/',
         getPages: AppRoutes.routes,
-        home:
+       // home:
        // MyDasboardScreen(),
-       OnBoardingPage(),
+      // OnBoardingPage(),
+       // IncidentViewFormScreen(ignoring: true,),
         //IncidentScreenDashboard(),
         navigatorKey: Get.key,
         theme:appThemeData,

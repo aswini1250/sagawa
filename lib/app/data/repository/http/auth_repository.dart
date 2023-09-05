@@ -12,7 +12,6 @@ class AuthRepository {
 
   Future<dynamic>updateLogin({required String body})async{
     debugPrint("update login");
-
     var response =await _http.post("${Api.updateLogin}", body,contentType: true);
     debugPrint("update login sure$response");
     return jsonDecode(response);
@@ -22,6 +21,4 @@ class AuthRepository {
     debugPrint("update login$response");
     return jsonDecode(response);
   }
-
-
 }

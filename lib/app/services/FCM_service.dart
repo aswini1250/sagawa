@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:sofproject/app/controllers/controller.dart';
 import 'package:sofproject/app/ui/screens/demo/notification_screen.dart';
 
 import '../data/repository/http/auth_repository.dart';
@@ -33,14 +34,14 @@ class FcmService{
     }
   }
 
-  localNotification({required RemoteMessage message}){
+  localNotification({required RemoteMessage message})async{
 
    try {
      RemoteNotification? notification = message.notification;
      AndroidNotification? android = message.notification?.android;
-     if (notification != null && android != null && !kIsWeb) {
+     if (notification != null && !kIsWeb) {
        debugPrint("entry notification");
-
+      await  setNotificationChannel();
        flutterLocalNotificationsPlugin.show(
          notification.hashCode,
          notification.title,
@@ -63,51 +64,52 @@ class FcmService{
 
      }
    }catch(e){
-     debugPrint("local notification error");
+     debugPrint("local notification error $e");
    }
 
   }
 
   fcmStart()async{
     await setNotificationChannel();
+    getFcmNotificationPermission();
     fcmOnMessage();
   }
 
 
-  getFcmToken()async{
+  getFcmToken({required String token})async{
     String? token = await messaging.getToken(
-      vapidKey: "BK9OfA-yGXM-m3mxmeCo9pd7OEmX3V3eXaR_Xv1V329iCKKlSLywvNDbDz8S9eQc_n7RQdY_kJYueD5T2xmNYv0",
     );
-    print("fcm token ${token}");
-    var body={
-      "fcm":"$token"
-    };
-    var res=await AuthRepository().fcmUpdate(body:body);
-    if(res.status==200 || res.status==201){
-      if (kDebugMode) {
-        print("Fcm token updated successfully");
-      }
-    }else{
-      commonSnackBar(title:"error".tr,msg: "fcm_tok_error".tr);
-    }
+     print("fcm token ${token}");
+     AuthController.to.token.text= "${token}";
+    // var body={
+    //   "fcm":"$token"
+    // };
+    // var res=await AuthRepository().fcmUpdate(body:body);
+    // if(res.status==200 || res.status==201){
+    //   if (kDebugMode) {
+    //     print("Fcm token updated successfully");
+    //   }
+    // }else{
+    //   commonSnackBar(title:"error".tr,msg: "fcm_tok_error".tr);
+    // }
   }
 
 fcmOnMessage()async{
 
 
 
-  FirebaseMessaging.instance.getInitialMessage().then(
-        (value) =>
-            print('Got a message initial $value')
-
-  );
+  // FirebaseMessaging.instance.getInitialMessage().then(
+  //       (value) =>
+  //           print('Got a message initial $value')
+  //
+  // );
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-
-    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
-      if (message != null) {
-        debugPrint("direction from screen ");
-          }
-    });
+    //
+    // FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+    //   if (message != null) {
+    //     debugPrint("direction from screen ");
+    //       }
+    // });
 
 
     if (kDebugMode) {
@@ -120,29 +122,6 @@ fcmOnMessage()async{
       }
       localNotification(message: message);
     }
-  });
-
-  Future<void> _onBackgroundMessage(RemoteMessage message) async {
-    // Handle the notification when the app is in the background or terminated
-    debugPrint("direction from screen ");
-    Get.to(() =>
-    // Horoscope()
-   NotificationScreen(),
-    );
-  }
-
-  FirebaseMessaging.onBackgroundMessage(_onBackgroundMessage);
-
-
-
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    debugPrint("direction from screen ");
-    Get.to(() =>
-      // Horoscope()
-      //DailyRasiPalan(),
-    NotificationScreen(),
-
-    );
   });
 
 

@@ -337,7 +337,7 @@ class DropdownFormFieldState<T> extends State<DropdownFormField>
                         AppColors.primaryColor,width: 1 ),
                       ),
 
-                      labelText: "${widget.label} ${widget.isRequired==true?"*":"optional".tr}",labelStyle: TextStyle(fontSize: 15,color:  AppColors.primaryColor.withAlpha(200)),
+                      labelText: "${widget.label} ${widget.isRequired==true?"*":"".tr}",labelStyle: TextStyle(fontSize: 15,color:  AppColors.primaryColor.withAlpha(200)),
                       enabledBorder:  OutlineInputBorder(
                         borderRadius:  BorderRadius.circular(8),
                         borderSide:  BorderSide(color:

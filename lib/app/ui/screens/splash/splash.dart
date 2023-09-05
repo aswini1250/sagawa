@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sofproject/app/ui/screens/demo/sagawa_login.dart';
 
 
@@ -17,7 +18,10 @@ class OnBoardingPage extends StatefulWidget {
 class OnBoardingPageState extends State<OnBoardingPage> {
   final introKey = GlobalKey<IntroductionScreenState>();
 
-  void _onIntroEnd(context) {
+  void _onIntroEnd(context)async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('onBoarding',"onboarding");
+
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (_) => SagawaLogin()),
     );
@@ -66,17 +70,19 @@ class OnBoardingPageState extends State<OnBoardingPage> {
       ),
       pages: [
         PageViewModel(
-          title: "Fractional shares",
+          title: "Welcome",
           body:
-          "Instead of having to buy an entire share, invest any amount you want.",
+
+
+          "Capture, track, and manage all incidents in the workplace anytime, anywhere!,",
           image: _buildImage('images/img1.jpg'),
           decoration: pageDecoration,
         ),
 
         PageViewModel(
-          title: "Full Screen Page",
+          title: "Incidents",
           body:
-          "Pages can be full screen as well.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc id euismod lectus, non tempor felis. Nam rutrum rhoncus est ac venenatis.",
+           "From injuries, illness, property damage, equiment failures to quality incidents, every incident can be tracked effortlessly in just a click!",
           image: _buildFullscreenImage(),
           decoration: pageDecoration.copyWith(
             contentMargin: const EdgeInsets.symmetric(horizontal: 16),
@@ -88,7 +94,8 @@ class OnBoardingPageState extends State<OnBoardingPage> {
         ),
 
         PageViewModel(
-          title: "Title of last page - reversed",
+          title:
+          "Click to track the recent incidents!.",
           bodyWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

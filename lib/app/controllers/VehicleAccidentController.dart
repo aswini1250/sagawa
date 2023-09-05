@@ -1,11 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/app_config.dart';
 import '../data/repository/http/VehicleAccidentRepository.dart';
+import '../ui/screens/demo/accidentViewFormScreen.dart';
 import '../ui/widgets/commonToast.dart';
-
+import '../ui/widgets/popup_loading.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart' as p;
 class VehicleAccidentController extends GetxController {
   static VehicleAccidentController get to =>
       Get.put(VehicleAccidentController());
@@ -27,7 +35,7 @@ class VehicleAccidentController extends GetxController {
   TextEditingController thirdPartyContactNumber = TextEditingController();
   TextEditingController thirdPartyVehicleNumber = TextEditingController();
 
-  // TextEditingController anyInjury = TextEditingController();
+   TextEditingController anyInjuryController = TextEditingController();
   TextEditingController briefDescriptionOfInjury = TextEditingController();
 
   // TextEditingController ambulanceInvolved = TextEditingController();
@@ -36,19 +44,165 @@ class VehicleAccidentController extends GetxController {
   TextEditingController correctiveAction = TextEditingController();
   TextEditingController preventiveAction = TextEditingController();
   TextEditingController rootCauseAnalysis = TextEditingController();
+  TextEditingController bodyParts = TextEditingController();
+
+
+
+
+  TextEditingController subjectApp = TextEditingController();
+  TextEditingController designationApp = TextEditingController();
+  TextEditingController dateAndTimeApp = TextEditingController();
+  TextEditingController descrioptionApp = TextEditingController();
+
+
+  // TextEditingController search =TextEditingController();
+
+  TextEditingController searchController = TextEditingController();
+
+  clearFilter(){
+    reportby.text="";
+    preparedby.text="";
+    status.text="";
+  }
+
+  clearFormIncidentApprovals(){
+
+    descrioptionApp.text="";
+  }
+  init() {
+    Future.delayed(Duration(seconds: 0),(){
+
+    });
+    debounce(_searchValue, (value) async {
+      debugPrint("entry of search controlle");
+      debugPrint('*******************************');
+
+      VehicleAccidentController.to.getDashboard();
+    },
+        time:AppConfig.debounceDuration);
+  }
+
+  final _reportCont="".obs;
+
+  get reportCont => _reportCont.value;
+
+  set reportCont(value) {
+    _reportCont.value = value;
+  }
+  final _incidentUploads=[].obs;
+
+  get incidentUploads => _incidentUploads.value;
+
+  set incidentUploads(value) {
+    _incidentUploads.value = value;
+  }
+  final _statusCont="".obs;
+
+  get statusCont => _statusCont.value;
+
+  set statusCont(value) {
+    _statusCont.value = value;
+  }
+
+  final _preparadCont="".obs;
+
+  get preparadCont => _preparadCont.value;
+
+  set preparadCont(value) {
+    _preparadCont.value = value;
+  }
+
+  final _searchValue ="".obs;
+
+  get searchValue => _searchValue.value;
+
+  set searchValue(value) {
+    _searchValue.value = value;
+  }
+
+
+
+
+
   final repository=VehicleAccidentRepository();
   final _showStaff=false.obs;
+  final _anyInjury = "Yes".obs;
 
+  get anyInjury => _anyInjury.value;
+
+  set anyInjury(value) {
+    _anyInjury.value = value;
+  }
+  final _senddivisorCostCentreId="".obs;
+
+  get senddivisorCostCentreId => _senddivisorCostCentreId.value;
+
+  set senddivisorCostCentreId(value) {
+    _senddivisorCostCentreId.value = value;
+  }
+  final _sendEmployeeNameId="".obs;
+
+  get sendEmployeeNameId => _sendEmployeeNameId.value;
+
+  set sendEmployeeNameId(value) {
+    _sendEmployeeNameId.value = value;
+  }
+  final _showBodyParts=false.obs;
+
+  get showBodyParts => _showBodyParts.value;
+
+  set showBodyParts(value) {
+    _showBodyParts.value = value;
+  }
+
+  final _ambulanceInvolved = "Yes".obs;
+
+  get ambulanceInvolved => _ambulanceInvolved.value;
+
+  set ambulanceInvolved(value) {
+    _ambulanceInvolved.value = value;
+  }
   get showStaff => _showStaff.value;
 
   set showStaff(value) {
     _showStaff.value = value;
   }
+  final _viewDropdown=false.obs;
 
+  get viewDropdown => _viewDropdown.value;
+
+  set viewDropdown(value) {
+    _viewDropdown.value = value;
+  }
+  final _selectedFiles = <File>[].obs;
+
+  get selectedFiles => _selectedFiles.value;
+
+  set selectedFiles(value) {
+    _selectedFiles.value = value;
+  }
+  final _showButton=false.obs;
+
+  get showButton => _showButton.value;
+
+  set showButton(value) {
+    _showButton.value = value;
+  }
+  final _showImage=false.obs;
+
+  get showImage => _showImage.value;
+
+  set showImage(value) {
+    _showImage.value = value;
+  }
+
+
+  clearFilterVariable(){
+    reportCont="";
+    preparadCont="";
+    statusCont="";
+  }
   clearFormField() {
-    preparedby.text = "";
-    status.text = "";
-    reportby.text = "";
     subject.text = "";
     divisionCostCentre.text = "";
     customerName.text = "";
@@ -64,6 +218,7 @@ class VehicleAccidentController extends GetxController {
     // anyInjury.text="";
     briefDescriptionOfInjury.text = "";
     // anyAmbulance.text="";
+    bodyParts.text="";
     remarks.text = "";
     descriptionOfAccident.text = "";
     correctiveAction.text = "";
@@ -96,6 +251,14 @@ class VehicleAccidentController extends GetxController {
 
   set division(value) {
     _division.value = value;
+  }
+
+  final _ambulaneInoled="Yes".obs;
+
+  get ambulaneInoled => _ambulaneInoled.value;
+
+  set ambulaneInoled(value) {
+    _ambulaneInoled.value = value;
   }
 
   getDivisionList() async {
@@ -148,7 +311,7 @@ class VehicleAccidentController extends GetxController {
     preparadByLoading = false;
     if (response['status'] == true) {
       List<Map<String, dynamic>>res = [];
-      response['cost_centre'].forEach((e) {
+      response['preparatedBy'].forEach((e) {
         res.add(e);
       });
       preparadBy = res;
@@ -234,9 +397,9 @@ class VehicleAccidentController extends GetxController {
     reportByLoading = true;
     var response = await repository.getReportByList();
     reportByLoading = false;
-    if (response['reportBy'] == true) {
+    if (response['status'] == true) {
       List<Map<String, dynamic>>res = [];
-      response['cost_centre'].forEach((e) {
+      response['ReportNo'].forEach((e) {
         res.add(e);
       });
       reportByList = res;
@@ -407,6 +570,13 @@ class VehicleAccidentController extends GetxController {
   set preventiveActionList(value) {
     _preventiveActionList.value = value;
   }
+  final _viewButton=false.obs;
+
+  get viewButton => _viewButton.value;
+
+  set viewButton(value) {
+    _viewButton.value = value;
+  }
 
   getPreventiveAction() async {
     preventiveActionLoading = true;
@@ -450,13 +620,22 @@ class VehicleAccidentController extends GetxController {
   set incidentDashboardListDummy(value) {
     _incidentDashboardListDummy.value= value;
   }
+  final _showsectionSection="".obs;
+
+  get showsectionSection => _showsectionSection.value;
+
+  set showsectionSection(value) {
+    _showsectionSection.value = value;
+  }
   getDashboard()async{
+    var body ="report_no=${reportCont}&praparated_by=${preparadCont}&status=${statusCont}";
+
     dashboardLoading=true;
-    var response=await repository.getDashboard();
+    var response=await repository.getDashboard(body:'$body');
     dashboardLoading=false;
     if(response['status']==true){
       List<Map<String,dynamic>>res=[];
-      response['IncidentData'].forEach((e){
+      response['AccidentData'].forEach((e){
         res.add(e);
       });
       incidentDashboardList=res;
@@ -467,6 +646,233 @@ class VehicleAccidentController extends GetxController {
     }
   }
 
+  setDataForUpdate({required String ID,required bool ignoring,required bool canShowSection2ForApprovals})async{
+    CommonScreenLoading.show(text: "Getting  data ...");
+    clearFormIncidentApprovals();
+    clearFormField();
+//setting the field
+    var response = await repository.getIncidentViewList(Id: ID);
+    Get.back();
+
+    debugPrint("check id is=${response}");
+    if(response['status']==true){
+      var IncidentId=response['AccidentView'];
+      subject.text="${IncidentId['subject']}"??"";
+      // character="${IncidentId['inctype']}"=="1"?"Near Miss":"${IncidentId['inctype']}"=="2"?"Customer Complaints":"${IncidentId['inctype']}"=="3"?"General Incidents":"General Incidents";
+
+      divisionCostCentre.text="${IncidentId['division_and_cost_centre']}"??"";
+      customerName.text="${IncidentId['customer_name']}"??"";
+      placeOfAccurance.text="${IncidentId['place_of_occurrence']}"??"";
+      dateAndTime.text="${IncidentId['date_and_time']}"??"";
+      bodyParts.text="${IncidentId['body_parts']}"??"";
+      employeeName.text="${IncidentId['employee_name']}"??"";
+      staffId.text="${IncidentId['staff_id']}"??"";
+      sghVehicleNumber.text="${IncidentId['sgh_vehicle_number']}"??"";
+      briefDamageDescription.text="${IncidentId['brief_damage_description']}"??"";
+      thirdPartyName.text="${IncidentId['third_party_name']}"??"";
+      thirdPartyContactNumber.text="${IncidentId['third_party_contact_number']}"??"";
+      thirdPartyVehicleNumber.text="${IncidentId['third_party_vehicle_number']}"??"";
+      anyInjury="${IncidentId['any_injury']}"=="1"?"Yes":"${IncidentId['any_injury']}"=="2"?"No":"Yes";
+      briefDescriptionOfInjury.text="${IncidentId['brief_description_of_injury']}"??"";
+      ambulaneInoled="${IncidentId['ambulance_invloved']}"=="1"?"Yes":"${IncidentId['ambulance_invloved']}"=="2"?"No":"Yes";
+      remarks.text="${IncidentId['remarks']}"??"";
+      descriptionOfAccident.text="${IncidentId['description_of_accident'].length}"??"";
+      correctiveAction.text="${IncidentId['corrective_action']}"??"";
+      preventiveAction.text="${IncidentId['preventive_action']}"??"";
+      rootCauseAnalysis.text="${IncidentId['root_cause_analysis']}"??"";
+      incidentUploads=response['imgUpload']==null?[]:response['imgUpload'];
+      List<File> files=[];
+      if(incidentUploads.isNotEmpty) {
+        for(int i=0;i<incidentUploads.length;i++){
+          final extension = p.extension(incidentUploads[i]['uploadfile_path']); // '.dart'
+          final filename =  "${incidentUploads[i]['uploadfile_path']}".split("/")[5];
+          debugPrint("extension of file name ${extension}");
+          debugPrint("file name ${filename}");
+          final http.Response responseData = await http.get(Uri.parse(
+              "${AppConfig.imgUrl}${incidentUploads[i]['uploadfile_path']}"));
+          Uint8List uint8list = responseData.bodyBytes;
+          var buffer = uint8list.buffer;
+          ByteData byteData = ByteData.view(buffer);
+          var tempDir = await getTemporaryDirectory();
+          var documentDir = Directory('${tempDir.path}/document');
+          if (!documentDir.existsSync()) {
+            documentDir.createSync(recursive: true);
+          }
+          File file = await File('${documentDir.path}/$filename')
+              .writeAsBytes(
+              buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+          files.add( File(file.path));
+
+        }}
+      VehicleAccidentController.to.selectedFiles.addAll(files);
+      debugPrint("iiiimages${  VehicleAccidentController.to.selectedFiles}");
+
+      //  incidentUploads.text="${response['imgUpload'][index]['uploadfile_path']}"??"as";
+
+      // incidentUploads.text="as";
+      Get.to(() => VehicleAccidentViewForms(ignoring: ignoring, accident_user_id: '${ID}',        canShowSection2ForApprovals:canShowSection2ForApprovals,
+      ));
+
+    }else{
+      CommonToast.show(msg: "${response['message']}");
+
+    }
+
+    debugPrint("check get datas");
+  }
+  saveAccidents()async{
+    debugPrint("body before submit vehicle accident");
+
+    SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
+    String user_id=aswiniPrefs.getString("user_id")??"";
+
+    CommonScreenLoading.show(text: "Saving...");
+    Map<String,dynamic> body={
+      "subject":subject.text,
+      "division_and_cost_centre":senddivisorCostCentreId,
+      "customer_name":customerName.text,
+      "place_of_occurrence":placeOfAccurance.text,
+      "date_and_time":dateAndTime.text,
+      "employee_name":sendEmployeeNameId,
+      "staff_id":staffId.text,
+      "sgh_vehicle_number":sghVehicleNumber.text,
+      "brief_damage_description": briefDamageDescription.text,
+      "third_party_name": thirdPartyName.text,
+      "third_party_contact_number": thirdPartyContactNumber.text,
+      "third_party_vehicle_number": thirdPartyVehicleNumber.text,
+
+      "any_injury": "${anyInjury}"=="Yes"?"1":"${anyInjury}"=="No"?"2":"2",
+      "body_parts":bodyParts.text,
+      "brief_description_of_injury":briefDescriptionOfInjury.text,
+      "ambulance_invloved":"${ambulanceInvolved}"=="Yes"?"1":"${ambulanceInvolved}"=="No"?"2":"2",
+      "remarks":remarks.text,
+   "description_of_accident":descriptionOfAccident.text,
+      "corrective_action":correctiveAction.text,
+      "preventive_action":preventiveAction.text,
+      "root_cause_analysis":rootCauseAnalysis.text,
+      "created_by":user_id,
+    };
+    debugPrint("aswinitrestppp${briefDamageDescription.text}");
+
+    debugPrint("aswinitrestp${thirdPartyName.text}");
+
+    debugPrint("body before submit ${jsonEncode(body)}");
+    var response =await repository.saveIncident(body: body);
+    Get.back();
+    if(response['status']==true){
+      CommonToast.show(msg: "${response['message']}");
+      clearFormField();
+      Get.back();
+      getDashboard();
+
+    }else{
+      CommonToast.show(msg: "${response['message']}");
+    }
+  }
+  updateAccidents({required String user_id})async{
+    debugPrint("body before submit vehicle accident");
+
+
+    CommonScreenLoading.show(text: "Saving...");
+    Map<String,dynamic> body={
+      "id":user_id,
+
+      "subject":subject.text,
+      "division_and_cost_centre":senddivisorCostCentreId,
+      "customer_name":customerName.text,
+      "place_of_occurrence":placeOfAccurance.text,
+      "date_and_time":dateAndTime.text,
+      "employee_name":sendEmployeeNameId,
+      "staff_id":staffId.text,
+      "sgh_vehicle_number":sghVehicleNumber.text,
+      "brief_damage_description": briefDamageDescription.text,
+      "third_party_name": thirdPartyName.text,
+      "third_party_contact_number": thirdPartyContactNumber.text,
+      "third_party_vehicle_number": thirdPartyVehicleNumber.text,
+
+      "any_injury": "${anyInjury}"=="Yes"?"1":"${anyInjury}"=="No"?"2":"2",
+      "body_parts":bodyParts.text,
+      "brief_description_of_injury":briefDescriptionOfInjury.text,
+      "ambulance_invloved":"${ambulanceInvolved}"=="Yes"?"1":"${ambulanceInvolved}"=="No"?"2":"2",
+      "remarks":remarks.text,
+      "description_of_accident":descriptionOfAccident.text,
+      "corrective_action":correctiveAction.text,
+      "preventive_action":preventiveAction.text,
+      "root_cause_analysis":rootCauseAnalysis.text,
+      "created_by":user_id,
+    };
+    debugPrint("aswinitrestppp${briefDamageDescription.text}");
+
+    debugPrint("aswinitrestp${thirdPartyName.text}");
+
+    debugPrint("body before submit ${jsonEncode(body)}");
+    var response =await repository.saveIncident(body: body);
+    Get.back();
+    if(response['status']==true){
+      CommonToast.show(msg: "${response['message']}");
+      Get.back();
+      getDashboard();
+
+    }else{
+      CommonToast.show(msg: "${response['message']}");
+    }
+  }
+
+  updateIncidentApprovals({required String accident_user_id,required String approveId})async{
+    SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
+    String user_id=aswiniPrefs.getString("user_id")??"";
+    String user_name=aswiniPrefs.getString("user_name")??"";
+    String designation_name=aswiniPrefs.getString("designation_name")??"";
+
+    CommonScreenLoading.show(text: "Saving...");
+    Map<String,dynamic> body={
+      "accident_id":accident_user_id,
+
+      "user_id":user_id,
+      "username":user_name,
+      "designation":designation_name,
+      "date_time":dateAndTimeApp.text,
+      "approve_id":approveId,
+      "description":descrioptionApp.text,
+      "accident_status":1,
+
+    };
+    debugPrint("body before submit ${jsonEncode(body)}");
+    var response =await repository.UpdateIncidentApproval(body: jsonEncode(body));
+    Get.back();
+    if(response['status']==true){
+      CommonToast.show(msg: "${response['message']}");
+      Get.back();
+
+      getDashboard();
+      clearFormIncidentApprovals();
+
+    }else{
+      CommonToast.show(msg: "${response['message']}");
+    }
+  }
+  getDataForApprovals({required String accident_user_id,})async{
+    Map<String,dynamic> body= {
+      "acc_id":accident_user_id,
+    };
+
+    var response = await repository.setDataForApprovals(body: jsonEncode(body));
+
+    debugPrint("check id is=${response}");
+    if(response['status']==true){
+      var ApproveData=response['ApproveData'];
+
+      subjectApp.text="${ApproveData['username']}"??"";
+      designationApp.text="${ApproveData['designation']}"??"";
+      dateAndTimeApp.text="${ApproveData['date_time']}"??"";
+      descrioptionApp.text="${ApproveData['description']}"??"";
+
+
+      // incidentUploads.text="as";
+
+    }
+    debugPrint("check get datas");
+  }
 
 
 }

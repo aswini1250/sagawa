@@ -13,6 +13,7 @@ import 'package:sofproject/app/controllers/controller.dart';
 import 'package:sofproject/app/ui/themes/MyColors.dart';
 import 'package:sofproject/app/ui/widgets/utils/common_textfield_TRL.dart';
 
+import '../../../services/FCM_service.dart';
 import '../../widgets/progress_dialog.dart';
 import '../../widgets/progress_loading.dart';
 import '../../widgets/utils/common_label_expanded_wrap_TRL.dart';
@@ -26,13 +27,18 @@ class SagawaLogin extends StatefulWidget {
   State<SagawaLogin> createState() => _SagawaLoginState();
 }
 
+
 class _SagawaLoginState extends State<SagawaLogin> {
   ProgressDialog? pr;
   final loginFormKey = GlobalKey<FormState>();
   bool isPhone(String input) =>
       RegExp(r'^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$')
           .hasMatch(input);
-
+  @override
+  void initState() {
+    super.initState();
+    FcmService().getFcmToken(token: 'token');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,20 +87,17 @@ class _SagawaLoginState extends State<SagawaLogin> {
               boxShadow: const [
                 BoxShadow(color: Color(0xffff0100), spreadRadius: 2),
               ],
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.grey.shade100, Colors.grey.shade200])),
+          color: Colors.white
+          ),
           child: SingleChildScrollView(
             child: Column(
               children: [
                 Image.asset('assets/images/logo-img-sofproject.png',
-                    height: 200, width: 200),
+                    height: 100, width: 200),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 const Text(
-
                   'LOGIN',
                   style: TextStyle(
                       color: Colors.black,
@@ -113,16 +116,17 @@ class _SagawaLoginState extends State<SagawaLogin> {
 
                   },
     validator: (String? data) {
-
-                        },
-
+      if (data == "" || data == null) {
+        return "Please enter user name";
+      } else {     return null;
+      }
+      },
                 ),
                 CommonTextField(
                   controller: AuthController.to.password,
                   labelText: "Password",
-                  hintText: "Enter Password",
+                  hintText: "Password",
                   onChange: (data){
-
                   },
                   validator: (data) {
                     if (data == "" || data == null) {
@@ -144,13 +148,13 @@ class _SagawaLoginState extends State<SagawaLogin> {
                     SizedBox(
                       width: Get.width * 0.1,
                     ),
-                    GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, PageTransition(child: ForgetPassword_Page(), type: PageTransitionType.leftToRight));
-                        },
-                        child: const Text('Forgot Password?',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15)))
+                    // GestureDetector(
+                    //     onTap: () {
+                    //       Navigator.push(context, PageTransition(child: ForgetPassword_Page(), type: PageTransitionType.leftToRight));
+                    //     },
+                    //     child: const Text('Forgot Password?',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.bold, fontSize: 15)))
                   ],
                 ),
                 const SizedBox(
@@ -172,11 +176,9 @@ class _SagawaLoginState extends State<SagawaLogin> {
                       ),
                       // color: const AppColors.primaryColor,
                       onPressed: ()async {
-
      if (loginFormKey.currentState!.validate()) {
        await AuthController.to.updatelogin();
-
-     }
+                                 }
                       },
                       child: const Text(
                         'LOGIN',

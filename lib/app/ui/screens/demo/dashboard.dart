@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sofproject/app/controllers/DashboardController.dart';
+import 'package:sofproject/app/controllers/incident_controller.dart';
 import 'package:sofproject/app/ui/screens/demo/drawer.dart';
 import 'package:sofproject/app/ui/screens/demo/property_damage.dart';
 import 'package:sofproject/app/ui/screens/demo_listview_gridview_checkbox.dart';
@@ -10,13 +11,17 @@ import 'package:sofproject/app/ui/widgets/color.dart';
 import 'package:sofproject/app/ui/widgets/common_button.dart';
 import 'package:sofproject/app/ui/widgets/utils/common_label_expanded_wrap_TRL.dart';
 
+import '../../../controllers/controller.dart';
+import '../../../services/FCM_service.dart';
 import '../../widgets/colors.dart';
 import '../../widgets/utils/fade_animation_TRL.dart';
 import 'IncidentScreenDashboard.dart';
 import 'VehicleAccidentScreenDashboard.dart';
+import 'notification_screen.dart';
 
 class MyDasboardScreen extends StatefulWidget {
    MyDasboardScreen({Key? key}) : super(key: key);
+
 
 
 
@@ -29,6 +34,7 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    IncidentController.to.getNotification();
     return Stack(
       children: <Widget>[
         Image.asset(
@@ -70,7 +76,7 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
             actions: <Widget>[
               InkWell(
                 onTap: () {
-
+Get.to(()=>NotificationScreen());
                 },
                 child: Center(
                   child: Padding(
@@ -103,80 +109,90 @@ class _MyDasboardScreenState extends State<MyDasboardScreen> {
           ),
           backgroundColor: Colors.transparent,
           body:
-          Column(children: <Widget>[
-            InkWell(onTap:(){
-              showBottomDialogRisk(context);
-            },
-                child: Column(
-                  children: [
-                    Text("Incident Management",style: TextStyle(color: AppColors.black,fontSize: 25),),
-SizedBox(height: 10,),
-                    Column(
-                      children: <Widget>[
+          Column(
+            children: [
+              SizedBox(height: 40,),
+
+              Text("Incident Management",style: TextStyle(color: AppColors.black,fontSize: 23),),
+              SizedBox(height: 40,),
+              Column(
+                children: <Widget>[
 ///////////////////////////////////////////////////////////
 
 
-                            Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.only(left:20.0,right:20,top:5,bottom: 5),
-                              padding: const EdgeInsets.all(5.0),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                      color: AppColors.lightGrey,
-                                      width: 2.0,
-                                      style: BorderStyle.solid),
-                                  color: AppColors.white
-                              //  color: lightBGGold,
-                             //   border: Border.all(color: lightBGGold),
+                  CommonDasboard(text: 'Incident', image: "assets/images/warning.png", onTap: () {Get.to(IncidentScreenDashboard()) ; }, ),
+                  CommonDasboard(text: 'Accident', image: "assets/images/injuries.png", onTap: () {Get.to(VehicleAccidentScreenDashboard()) ; }, ),
+                  CommonDasboard(text: 'Property Damage', image: "assets/images/cardboard.png", onTap: () {Get.to(PropertyDamageScreenDashboard()) ; }, )
 
-                              ),
-                              child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor: Color(0xFFefeff4),
-                                      child: ClipOval(
-                                        child: Image.asset(
-                                          'assets/images/logo-img-sofproject.png',
-                                          width: 50,
-                                          height: 50,
-                                          fit: BoxFit.fitWidth,
-                                        ),
-                                      ),
-                                    ),
-                                    new Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: new Text(
-                                        "Incident",
-                                          style: TextStyle(
-                                              fontSize: 20, color: Colors.black),
-                                        )),
-                                    IconButton(
-                                      icon: Icon(
-                                          Icons.arrow_right,
-                                          color: Colors.black,
-                                          size: 42),
-                                      onPressed: () {
-                                        setState(() {
-                                        });
-                                        //_key.currentState.openDrawer();
-                                      },
-                                    ),
-                                  ]),
-                            ),
+                  //               CommonDasboard(text: 'Accident', image: "assets/images/injuries.png", onTap: (){
+    // Get.to(()=>IncidentScreenDashboard());
+    //               CommonDasboard(text: 'Property Damage', image: "assets/images/cardboard.png", onTap: (){
+    // Get.to(()=>IncidentScreenDashboard()
 
-                      ],
-                    )
-                  ],
-                ))
-
-        ]),
+                ],
+              )
+            ],
+          )
         )  ],
     );
   }
+Widget CommonDasboard({required String text,required image,required Function() onTap}){
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(left:20.0,right:20,top:10,bottom: 5,),
+      padding: const EdgeInsets.all(5.0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: AppColors.lightGrey,
+              width: 3.0,
+              style: BorderStyle.solid),
+          color: AppColors.white
+        //  color: lightBGGold,
+        //   border: Border.all(color: lightBGGold),
 
+      ),
+      child: Column(
+        children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: Color(0xFFefeff4),
+                  child: ClipOval(
+                    child: Image.asset(
+                      '$image',
+                      width: 33,
+                      height: 33,
+                      fit: BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
+                new Align(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      "$text",
+                      style: TextStyle(
+                          fontSize: 20, color: Colors.black),
+                    )),
+                IconButton(
+                  icon: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: AppColors.grey,
+                      size: 42),
+                //_key.currentState.openDrawer();
+                   onPressed: () {
+                     onTap();
+
+                   },
+                ),
+              ]),
+          SizedBox(height: 10,)
+        ],
+      ),
+    );
+}
   Stack notification() {
     return Stack(
                     children: <Widget>[
@@ -193,13 +209,18 @@ SizedBox(height: 10,),
                             minWidth: 12,
                             minHeight: 12,
                           ),
-                          child: new Text(
-                            "1",
-                            style: new TextStyle(
-                              color: Colors.white,
-                              fontSize: 8,
+                          child:  Obx(()=>
+                             Padding(
+                               padding: const EdgeInsets.all(2.0),
+                               child: Text(
+                                "${IncidentController.to.notificationsCount}",
+                                style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 8,
+                                ),
+                                textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
+                             ),
                           ),
                         ),
                       )
@@ -302,11 +323,15 @@ commonButton(title: "Cancel", onTap: (){
     Widget cancelButton = commonButton(
 
       title: "Cancel",onTap: (){
-
+Get.back();
     },
     );
     Widget continueButton =   commonButton(
-      title: "Confirm",onTap: (){},
+      title: "Confirm",onTap: (){
+
+      AuthController.to.logout();
+
+    },
     );
 
     // set up the AlertDialog

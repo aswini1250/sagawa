@@ -57,7 +57,9 @@ dependencies:
   mime: ^1.0.4
   image_picker:
   photo_view:
+  open_filex:
   file_picker:
+  flutter_cache_manager:
   fluttertoast: ^8.0.8
   permission_handler: ^10.0.0
   flare_flutter: ^3.0.2
@@ -66,6 +68,11 @@ dependencies:
   dots_indicator: ^2.1.2
   flutter_keyboard_visibility: ^5.4.1
   introduction_screen: ^3.1.11
+  line_icons:
+  cr_file_saver:
+  path_provider:
+  logger: ^2.0.1
+  flutter_html:
 
 dev_dependencies:
   flutter_test:

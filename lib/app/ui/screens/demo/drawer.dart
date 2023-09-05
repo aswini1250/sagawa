@@ -9,6 +9,8 @@ import 'package:sofproject/app/ui/themes/MyColors.dart';
 import 'package:sofproject/app/ui/widgets/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../controllers/controller.dart';
+
 
 
 class DrawerMenu extends StatefulWidget {
@@ -238,6 +240,7 @@ showDeleteAlertDialog(BuildContext context, {required String Id}) {
     child:
     Text("Confirm".tr, style: TextStyle(color: AppColors.primaryColor)),
     onPressed: () async {
+      AuthController.to.logout();
 
     },
   );

@@ -1,6 +1,6 @@
-
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
@@ -8,25 +8,32 @@ import 'package:sofproject/app/services/api_service.dart';
 import 'package:sofproject/app/services/http_service.dart';
 
 import '../../../controllers/incident_controller.dart';
-
+import 'package:logger/logger.dart';
+import 'dart:developer' as logDev;
 
 class IncidentFormRepository{
   static final HttpHelper _http = HttpHelper();
 
 
-  getDashboard() async {
-    var response = await _http.get("${Api.getIncidentDashboard}");
+  getDashboard({required String body}) async {
+    var response = await _http.get("${Api.getIncidentDashboard}$body");
     return jsonDecode(response);
   }
+  getNotification() async {
+    var response = await _http.get("${Api.getNotification}");
+    return jsonDecode(response);
+  }
+
+
   saveIncident({required body}) async {
     var list=[];
     Map<String, MultipartFile> fileMap = {};
     Map<String, File> getFile= {};
-    IncidentController.to.selectedFiles.forEach((File e){
+    for(int i=0;i< IncidentController.to.selectedFiles.length;i++){
       getFile.addAll({
-        "incident_uploads": e
-      });
-    });
+        "$i": IncidentController.to.selectedFiles[i]
+        });
+   }
     for (MapEntry fileEntry in getFile.entries) {
       File file = fileEntry.value;
       List<int> fileBytes = await file.readAsBytes();
@@ -36,9 +43,12 @@ class IncidentFormRepository{
         "inc_image":"${base64String}"
       });
     }
-    body["incident_uploads"]=list;
+  // print(list);
+  body["incident_uploads"]=list;
+  var request_bdy=jsonEncode(body);
     body.addAll(fileMap);
-    debugPrint("test data before upload $body");
+    var logger = Logger();
+    logger.d("test data before upload ${ body["incident_uploads"]}");
     var response = await _http.post("${Api.getIncidentSave}",
         jsonEncode(body),
         contentType: true
@@ -51,13 +61,11 @@ class IncidentFormRepository{
     debugPrint("get getDivisionList");
     return jsonDecode(response);
   }
-
   getEmployeeList() async {
     var response = await _http.get("${Api.getEmployeeList}");
     debugPrint("get getEmployeeList");
     return jsonDecode(response);
   }
-
 
   getSGHVehicleList() async {
     var response = await _http.get("${Api.getSGHVehicleList}");
@@ -75,18 +83,38 @@ class IncidentFormRepository{
     return jsonDecode(response);
   }
   getPreparedByList() async {
-    var response = await _http.get("${Api.getSGHVehicleList}");
+    var response = await _http.get("${Api.getpreparedBy}");
     debugPrint("get getPreventiveActionList");
     return jsonDecode(response);
   }
   gettStatusList() async {
-    var response = await _http.get("${Api.getCorrectiveActionList}");
+    var response = await _http.get("${Api.getStatus}");
     debugPrint("get gettStatusList");
     return jsonDecode(response);
   }
   getReportByList() async {
-    var response = await _http.get("${Api.getPreventiveActionList}");
+    var response = await _http.get("${Api.getReportBy}");
     debugPrint("get getReportByList");
     return jsonDecode(response);
   }
+  getIncidentViewList({required String Id})async {
+    var response = await _http.get("${Api.getIncidentView}?id=$Id",auth: true);
+    debugPrint("EDIT VIEW");
+    return jsonDecode(response);
+  }
+  UpdateIncidentApproval({required dynamic body}) async {
+    debugPrint("test data before upload ");
+
+    var response = await _http.post("${Api.incidentApproveSection}",body,auth: true,contentType: true);
+
+    return jsonDecode(response.toString());
+  }
+  setDataForApprovals({required dynamic body}) async {
+    debugPrint("test data before upload ");
+
+    var response = await _http.post("${Api.getDataForApprovalsInsident}",body,auth: true,contentType: true);
+
+    return jsonDecode(response.toString());
+  }
 }
+

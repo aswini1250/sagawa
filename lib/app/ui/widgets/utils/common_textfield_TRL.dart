@@ -24,37 +24,40 @@ class CommonTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      child: TextFormField(
-       controller: controller,
-        style: TextStyle(),
-        //initialValue: reported_by,
-        keyboardType: TextInputType.multiline,
-        textInputAction:
-        TextInputAction.newline,
+    return  Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        child: TextFormField(
+         controller: controller,
+          style: TextStyle(),
+          //initialValue: reported_by,
+          keyboardType: TextInputType.multiline,
+          textInputAction:
+          TextInputAction.newline,
 
-        minLines: 1,
-        maxLines: null,
-        obscureText: false,
-        validator: validator,
-        decoration: InputDecoration(
-          icon: Icon(
-            icon,
-            color: iconColor,
+          minLines: 1,
+          maxLines: null,
+          obscureText: false,
+          validator: validator,
+          decoration: InputDecoration(
+            icon: Icon(
+              icon,
+              color: iconColor,
+            ),
+           // fillColor: AppColors.dropdownColor,
+            labelText: hintText,
+            hintText: labelText,
+            border: InputBorder.none,
           ),
-         // fillColor: AppColors.dropdownColor,
-          labelText: hintText,
-          hintText: labelText,
-          border: InputBorder.none,
-        ),
-        // keyboardType: TextInputType.number,
-        onChanged: (value) {
-          onChange!(value);
+          // keyboardType: TextInputType.number,
+          onChanged: (value) {
+            onChange!(value);
 
-          // _r_reportby = reported_by;
-        },
-        //maxLength: 10,
+            // _r_reportby = reported_by;
+          },
+          //maxLength: 10,
+        ),
       ),
     );
   }
