@@ -278,7 +278,6 @@ class _PropertyDamageScreenDashboardState
                                       PropertyDamageController.to.selectedFiles=<File>[];
 
                                       Get.to(() =>
-
                                       //  MyApp()
                                       PropertyDamageDashboardMyForms());
                                     },

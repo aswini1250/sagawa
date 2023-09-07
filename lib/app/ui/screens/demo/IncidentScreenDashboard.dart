@@ -75,6 +75,7 @@ class _IncidentScreenDashboardState extends State<IncidentScreenDashboard> {
   void initState() {
     super.initState();
     init();
+
     _searchController.text = '';
     IncidentController.to.getDashboard();
     IncidentController.to.geReportByList();
@@ -113,8 +114,7 @@ class _IncidentScreenDashboardState extends State<IncidentScreenDashboard> {
                     width: Get.width,
                     child: _buildSearchBox()),
               ),
-              Obx(
-                () => IncidentController.to.viewDropdown == true
+              Obx(() => IncidentController.to.viewDropdown == true
                     ? Wrap(
                         children: [
                           Obx(
@@ -684,15 +684,14 @@ Widget _buildSearchBox() {
       SizedBox(width: 7,),
       InkWell(
         onTap: () {
-          IncidentController.to.viewDropdown =
-              !IncidentController.to.viewDropdown;
+          IncidentController.to.viewDropdown = !IncidentController.to.viewDropdown;
         },
         child: Container(
           decoration: commonButtonDecoration(),
           child: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Center(
-              child: const Icon(
+              child:  Icon(
                 LineIcons.filter,
                 color: AppColors.white,
               ),

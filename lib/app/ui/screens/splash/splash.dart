@@ -74,7 +74,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
           body:
 
 
-          "Capture, track, and manage all incidents in the workplace anytime, anywhere!,",
+          "Capture, track, and manage all incidents in the workplace anytime, anywhere!.",
           image: _buildImage('images/img1.jpg'),
           decoration: pageDecoration,
         ),
@@ -99,7 +99,7 @@ class OnBoardingPageState extends State<OnBoardingPage> {
           bodyWidget: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Click on ", style: bodyStyle),
+              Text("Click done ", style: bodyStyle),
             //  Icon(Icons.edit),
           //    Text(" to edit a post", style: bodyStyle),
             ],

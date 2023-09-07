@@ -43,7 +43,6 @@ class IncidentController extends GetxController{
   TextEditingController correctionAction = TextEditingController();
   TextEditingController preventiveAction = TextEditingController();
   TextEditingController rootCauseAnalysis = TextEditingController();
-  TextEditingController correctiveAction = TextEditingController();
  // TextEditingController incidentUploads = TextEditingController();
  // TextEditingController search =TextEditingController();
 
@@ -73,6 +72,13 @@ class IncidentController extends GetxController{
 
   set searchValue(value) {
     _searchValue.value = value;
+  }
+final _refreshValue=false.obs;
+
+  get refreshValue => _refreshValue.value;
+
+  set refreshValue(value) {
+    _refreshValue.value = value;
   }
 
   final repository=IncidentFormRepository();
@@ -133,7 +139,7 @@ final _senddivisorCostCentreId="".obs;
     weight.text="";
     quantityOfDamaged.text="";
     remarks.text="";
-    correctiveAction.text="";
+    correctionAction.text="";
     preventiveAction.text="";
     rootCauseAnalysis.text="";
   }
@@ -281,6 +287,7 @@ final _viewDropdown=false.obs;
       });
       incidentDashboardList=res;
       incidentDashboardListDummy=res;
+
     }else{
       incidentDashboardList=<Map<String,dynamic>>[];
       CommonToast.show(msg: "${response['message']}");
@@ -697,6 +704,8 @@ final _viewDropdown=false.obs;
   }
 
   setDataForUpdate({required String ID,required bool ignoring,required bool canShowSection2ForApprovals})async{
+    selectedFiles=<File>[];
+
     CommonScreenLoading.show(text: "Getting  data ...");
     clearFormIncidentApprovals();
     clearFormField();

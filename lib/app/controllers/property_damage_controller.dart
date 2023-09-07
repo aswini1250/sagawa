@@ -754,6 +754,7 @@ class PropertyDamageController extends GetxController {
   }
 
   setDataForUpdate({required String ID,required bool ignoring,required bool canShowSection2ForApprovals})async{
+    selectedFiles=<File>[];
     CommonScreenLoading.show(text: "Getting  data ...");
     clearFormIncidentApprovals();
     clearFormField();

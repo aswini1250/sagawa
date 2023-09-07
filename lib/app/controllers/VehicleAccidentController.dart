@@ -647,6 +647,7 @@ class VehicleAccidentController extends GetxController {
   }
 
   setDataForUpdate({required String ID,required bool ignoring,required bool canShowSection2ForApprovals})async{
+    selectedFiles=<File>[];
     CommonScreenLoading.show(text: "Getting  data ...");
     clearFormIncidentApprovals();
     clearFormField();
@@ -676,7 +677,7 @@ class VehicleAccidentController extends GetxController {
       briefDescriptionOfInjury.text="${IncidentId['brief_description_of_injury']}"??"";
       ambulaneInoled="${IncidentId['ambulance_invloved']}"=="1"?"Yes":"${IncidentId['ambulance_invloved']}"=="2"?"No":"Yes";
       remarks.text="${IncidentId['remarks']}"??"";
-      descriptionOfAccident.text="${IncidentId['description_of_accident'].length}"??"";
+      descriptionOfAccident.text="${IncidentId['description_of_accident']}"??"";
       correctiveAction.text="${IncidentId['corrective_action']}"??"";
       preventiveAction.text="${IncidentId['preventive_action']}"??"";
       rootCauseAnalysis.text="${IncidentId['root_cause_analysis']}"??"";
@@ -706,6 +707,8 @@ class VehicleAccidentController extends GetxController {
         }}
       VehicleAccidentController.to.selectedFiles.addAll(files);
       debugPrint("iiiimages${  VehicleAccidentController.to.selectedFiles}");
+      debugPrint("iiiimages length for checkkk${  VehicleAccidentController.to.selectedFiles.length}");
+      debugPrint("iiiimages testingggggggggggg${  VehicleAccidentController.to.incidentUploads.length}");
 
       //  incidentUploads.text="${response['imgUpload'][index]['uploadfile_path']}"??"as";
 

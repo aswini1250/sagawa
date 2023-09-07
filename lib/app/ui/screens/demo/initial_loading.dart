@@ -64,7 +64,6 @@ class _InitialLoginTestState extends State<InitialLoginTest> {
                   MyDasboardScreen():
                   SagawaLogin()
               ),
-
             ],
           )
       );

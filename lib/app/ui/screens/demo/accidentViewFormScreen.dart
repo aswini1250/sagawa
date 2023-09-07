@@ -436,7 +436,20 @@ class _VehicleAccidentViewFormsState extends State<VehicleAccidentViewForms> {
                             )
                         )
                     ),
+                    Container(
+                      width:   Get.width*.9,
+                      child: CommonTextFormManPowerField(
+                        controller:VehicleAccidentController.to.bodyParts,
+                        lableText: "Body Parts",
+                        hintText: "Enter Body Parts",
+                        onChanged: (data){
 
+                        },
+                        validator: (data){
+                          return null;
+                        },
+                      ),
+                    ),
                     ///Expandable widget with common textfield
                     Container(
                       width:   Get.width*.9,

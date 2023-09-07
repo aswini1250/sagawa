@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:sofproject/app/controllers/VehicleAccidentController.dart';
+import 'package:sofproject/app/controllers/incident_controller.dart';
 import 'package:sofproject/app/ui/screens/demo/IncidentScreenDashboard.dart';
 import 'package:sofproject/app/ui/screens/demo/VehicleAccidentScreenDashboard.dart';
 import 'package:sofproject/app/ui/screens/demo/property_damage.dart';
@@ -10,6 +12,7 @@ import 'package:sofproject/app/ui/widgets/color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../controllers/controller.dart';
+import '../../../controllers/property_damage_controller.dart';
 
 
 
@@ -26,9 +29,6 @@ class _DrawerMenu extends State<DrawerMenu> {
     //insertApi();
     super.initState();
   }
-
-
-
 
 
   @override
@@ -56,20 +56,21 @@ class _DrawerMenu extends State<DrawerMenu> {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.power_settings_new,
-                          color: AppColors.white,
-                        ),
-                        onPressed: () {
-                          debugPrint("individual ");
-                          showDeleteAlertDialog(
-                              Get.context!,
-                              Id: "");                                 },
-                      ),
-                    ),
+                    SizedBox(height: 50,),
+                    // Container(
+                    //   alignment: Alignment.centerRight,
+                    //   child: IconButton(
+                    //     icon: Icon(
+                    //       Icons.power_settings_new,
+                    //       color: AppColors.white,
+                    //     ),
+                    //     onPressed: () {
+                    //       debugPrint("individual ");
+                    //       showDeleteAlertDialog(
+                    //           Get.context!,
+                    //           Id: "");                                 },
+                    //   ),
+                    // ),
                     CircleAvatar(
                       radius: 85,
                       backgroundColor: Color(0xFFefeff4),
@@ -102,17 +103,17 @@ class _DrawerMenu extends State<DrawerMenu> {
                     // ),
                     SizedBox(height: 30.0),
                     _buildDivider(),
-                    ListTile(
-                      onTap: () {},
-                      leading: Icon(
-                        Icons.home,
-                        color: AppColors.white,
-                        size: 20,
-                      ),
-                      title: Text('Home'.tr,
-                          style: TextStyle(fontSize: 16, color: Colors.white)),
-                    ),
-                    _buildDivider(),
+                    // ListTile(
+                    //   onTap: () {},
+                    //   leading: Icon(
+                    //     Icons.home,
+                    //     color: AppColors.white,
+                    //     size: 20,
+                    //   ),
+                    //   title: Text('Home'.tr,
+                    //       style: TextStyle(fontSize: 16, color: Colors.white)),
+                    // ),
+                    // _buildDivider(),
                     ExpansionTile(
                       tilePadding: const EdgeInsets.only(left: 0.0),
                       iconColor: Color(0xFFf9e9ce),
@@ -136,7 +137,7 @@ class _DrawerMenu extends State<DrawerMenu> {
                       children: <Widget>[
                         ExpansionTile(
                           tilePadding:
-                          const EdgeInsets.only(right: 20.0, left: 20),
+                           EdgeInsets.only(right: 20.0, left: 20),
 
                           initiallyExpanded: true,
                           title: InkWell(
@@ -144,8 +145,9 @@ class _DrawerMenu extends State<DrawerMenu> {
                                 style: TextStyle(
                                     fontSize: 16,
                                     color:AppColors.white)),
-                            onTap: () {
-Get.to(()=>IncidentScreenDashboard());
+                            onTap: () async{
+                              IncidentController.to.viewDropdown=true;
+                              Get.to(()=>IncidentScreenDashboard());
 
                             },
                           ),
@@ -154,26 +156,30 @@ Get.to(()=>IncidentScreenDashboard());
                           }),
                         ), //
 
-                        ExpansionTile(
-                          tilePadding:
-                          const EdgeInsets.only(right: 20.0, left: 20),
 
-                          initiallyExpanded: true,
-                          title: InkWell(
-                            child: Text("Accident".tr,
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: AppColors.white)),
-                            onTap: () {
+                          ExpansionTile(
+                            tilePadding:
+                            const EdgeInsets.only(right: 20.0, left: 20),
 
-                              Get.to(()=>VehicleAccidentScreenDashboard());
+                            initiallyExpanded: true,
+                            title: InkWell(
+                              child: Text("Accident".tr,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: AppColors.white)),
+                              onTap: () async{
 
-                            },
+                                VehicleAccidentController.to.viewDropdown=true;
+
+                                Get.to(()=>VehicleAccidentScreenDashboard());
+
+                              },
+                            ),
+                            onExpansionChanged: ((newState) {
+
+                            }),
                           ),
-                          onExpansionChanged: ((newState) {
-
-                          }),
-                        ), //
+                        //
                         ExpansionTile(
                           tilePadding:
                           const EdgeInsets.only(right: 20.0, left: 20),
@@ -186,6 +192,7 @@ Get.to(()=>IncidentScreenDashboard());
                                       fontSize: 16,
                                       color: AppColors.white)),
                               onTap: () async {
+                                PropertyDamageController.to.viewDropdown=true;
                                 Get.to(()=>PropertyDamageScreenDashboard());
 
                               }),

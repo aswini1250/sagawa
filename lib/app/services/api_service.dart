@@ -34,7 +34,6 @@ class Api{
   static const propertyApproveSection = AppConfig.baseUrl + "property/approve_section";
   static const getDataForApprovalsInsident = AppConfig.baseUrl + "incident/approved_incident";
   static const getDataForApprovalsAccident = AppConfig.baseUrl + "accident/approved_accident";
-
   static const getDataForApprovalsProperty = AppConfig.baseUrl + "property/approved_property";
 
 }

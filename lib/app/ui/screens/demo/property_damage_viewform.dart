@@ -429,7 +429,6 @@ class _PropertyDamageViewFormsState extends State<PropertyDamageViewForms> {
                     )
                 ),
                 ///Expandable widget with common textfield
-                Obx(()=>PropertyDamageController.to.showBodyParts==true?
                 Container(
                   width:   Get.width*.9,
                   child: CommonTextFormManPowerField(
@@ -443,8 +442,8 @@ class _PropertyDamageViewFormsState extends State<PropertyDamageViewForms> {
                       return null;
                     },
                   ),
-                ):SizedBox(),
                 ),
+
                 ///Expandable widget with common textfield
                 Container(
                   width:   Get.width*.9,

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:line_icons/line_icons.dart';
+import 'package:sofproject/app/ui/screens/demo/property_damage_viewform.dart';
 import 'package:sofproject/app/ui/themes/MyColors.dart';
 import 'package:sofproject/app/ui/widgets/progress_loading.dart';
 
@@ -9,6 +11,9 @@ import '../../../controllers/incident_controller.dart';
 import '../../../controllers/notification_controller.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
+
+import 'accidentViewFormScreen.dart';
+import 'incident_view_form_screen.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({Key? key}) : super(key: key);
@@ -76,10 +81,31 @@ class NotificationScreen extends StatelessWidget {
                            child:
                            Html(
                              data: """
-               ${IncidentController.to.notificationsList[index]['NOTIFICATION_DESC']}
+               ${IncidentController.to.notificationsList[index]['notificationDesc']}
                    """,
                            ),
                        ),
+                      Flexible(
+                         child:Text("${IncidentController.to.notificationsList[index]['lastactivity']}",style: TextStyle(fontSize: 10,color: AppColors.black),)
+                       ),
+                                 InkWell(onTap:(){
+
+                                    IncidentController.to.notificationsList[index]['notification_type']==1?
+                                    Get.to(() => IncidentViewFormScreen(
+                                      ignoring: false,
+                                      canShowSection2ForApprovals:true,
+                                      incident_user_id: '${ IncidentController.to.notificationsList[index]['Id']}',
+                                    )):IncidentController.to.notificationsList[index]['notification_type']==2?  Get.to(() => VehicleAccidentViewForms(
+                                      ignoring: false,
+                                      canShowSection2ForApprovals:true,
+                                      accident_user_id: '${ IncidentController.to.notificationsList[index]['Id']}',
+                                    )):IncidentController.to.notificationsList[index]['notification_type']==3?  Get.to(() => PropertyDamageViewForms(
+                                        ignoring: false,
+                                        canShowSection2ForApprovals:true,
+                                        property_user_id: '${ IncidentController.to.notificationsList[index]['Id']}',)):SizedBox();
+
+}, child:Icon(LineIcons.eyeDropper))
+
 
                      ],
                    ),

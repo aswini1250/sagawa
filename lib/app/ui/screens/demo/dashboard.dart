@@ -85,26 +85,26 @@ Get.to(()=>NotificationScreen());
                   ),
                 ),
               ),
-              SizedBox(width: 10.0),
-              InkWell(
-                onTap: () {
-                  debugPrint("individual ");
-                  showDeleteAlertDialog(
-                      Get.context!,
-                      Id: "");
-                },
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: Stack(
-                      children: <Widget>[
-                        new Icon(Icons.power_settings_new, color: Colors.white, size: 28),
-
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+               SizedBox(width: 10.0),
+              // InkWell(
+              //   onTap: () {
+              //     debugPrint("individual ");
+              //     showDeleteAlertDialog(
+              //         Get.context!,
+              //         Id: "");
+              //   },
+              //   child: Center(
+              //     child: Padding(
+              //       padding: const EdgeInsets.only(right: 8.0),
+              //       child: Stack(
+              //         children: <Widget>[
+              //           new Icon(Icons.power_settings_new, color: Colors.white, size: 28),
+              //
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
             ],
           ),
           backgroundColor: Colors.transparent,
@@ -284,7 +284,6 @@ Widget CommonDasboard({required String text,required image,required Function() o
                       );},),
                       shortWithoutArrowExtensibleWidget(text: 'Property damage',  onTap: (){Get.to(PropertyDamageScreenDashboard(),
                       );},),
-
 
                     ],
                   ),
