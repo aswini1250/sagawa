@@ -61,6 +61,8 @@ class _VehicleAccidentViewFormsState extends State<VehicleAccidentViewForms> {
     });
   }
   init()async{
+    debugPrint("yes yes");
+
     VehicleAccidentController.to.showBodyParts=true;
 
     SharedPreferences aswiniPrefs=await SharedPreferences.getInstance();
